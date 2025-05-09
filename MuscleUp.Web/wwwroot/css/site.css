@@ -1,0 +1,13 @@
+.alert-wrapper {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    width: 100%;
+    padding-right: 1rem;
+    z-index: 9999;
+}
+
+.alert {
+    max-width: 350px;
+    width: 100%;
+}

@@ -21,7 +21,7 @@ public class ContasController : BaseApiController
         var usuario = _appDbContext.Usuarios.FirstOrDefault(u => u.Email == request.Email);
 
         if (usuario == null || usuario.Senha != request.Senha)
-            return Ok("Credenciais inválidas");
+            throw new Exception("Credenciais inválidas");
 
         var claims = new List<Claim>
         {

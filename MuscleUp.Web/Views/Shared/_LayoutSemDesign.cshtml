@@ -10,8 +10,26 @@
 
 </head>
 <body class="bg-light">
+
+
     <main role="main">
         @RenderBody()
+
+        <div class="container fixed-bottom d-flex justify-content-end mb-3">
+            <div ng-if="mensagemGlobal" class="alert w-auto"
+                 ng-class="{
+           'alert-success': mensagemGlobal.tipo === 'success',
+           'alert-danger': mensagemGlobal.tipo === 'error',
+           'alert-warning': mensagemGlobal.tipo === 'warning',
+           'alert-info': mensagemGlobal.tipo === 'info'
+         }">
+                <i ng-if="mensagemGlobal.tipo === 'success'" class="fa fa-solid fa-circle-check"></i>
+                <i ng-if="mensagemGlobal.tipo === 'error'" class="fa  fa-triangle-exclamation"></i>
+                <i ng-if="mensagemGlobal.tipo === 'warning'" class="fa fa-solid fa-triangle-exclamation"></i>
+                <i ng-if="mensagemGlobal.tipo === 'info'" class="fa fa-solid fa-circle-info"></i>
+                {{ mensagemGlobal.texto }}
+            </div>
+        </div>
     </main>
 </body>
 </html>
