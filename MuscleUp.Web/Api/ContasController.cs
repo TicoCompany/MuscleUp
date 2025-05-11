@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MuscleUp.Dominio.Auth;
 using MuscleUp.Dominio.DataBase;
@@ -14,14 +15,17 @@ public class ContasController : BaseApiController
     {
         _appDbContext = appDbContext;
     }
-
+    [AllowAnonymous]
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         var usuario = _appDbContext.Usuarios.FirstOrDefault(u => u.Email == request.Email);
+        
+        if(usuario == null)
+            return Erro("E-mail não cadastrado");
 
-        if (usuario == null || usuario.Senha != request.Senha)
-            throw new Exception("Credenciais inválidas");
+        if (usuario.Senha != request.Senha)
+            return Erro("Senha inválida");
 
         var claims = new List<Claim>
         {
@@ -48,7 +52,7 @@ public class ContasController : BaseApiController
             Email = usuario.Email
         };
 
-        return Ok("Login realizado com sucesso!");
+        return Sucesso("Login realizado com sucesso!");
     }
 
     [HttpPost("logout")]

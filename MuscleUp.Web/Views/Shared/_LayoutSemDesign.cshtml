@@ -1,35 +1,41 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-br" ng-app="app">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MuscleUp</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - MuscleUp</title>
 
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-    @await RenderSectionAsync("Scripts", required: false)
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+	@await RenderSectionAsync("Scripts", required: false)
 
 </head>
+<loader-global></loader-global>
 <body class="bg-light">
 
+	<main role="main">
+		@RenderBody()
 
-    <main role="main">
-        @RenderBody()
-
-        <div class="container fixed-bottom d-flex justify-content-end mb-3">
-            <div ng-if="mensagemGlobal" class="alert w-auto"
-                 ng-class="{
+		<div class="container fixed-bottom d-flex justify-content-center mb-3">
+			<div ng-if="mensagemGlobal" class="alert alert-global d-flex align-items-center gap-3 w-auto position-relative pt-4 pe-5"
+				 ng-class="{
            'alert-success': mensagemGlobal.tipo === 'success',
            'alert-danger': mensagemGlobal.tipo === 'error',
            'alert-warning': mensagemGlobal.tipo === 'warning',
            'alert-info': mensagemGlobal.tipo === 'info'
          }">
-                <i ng-if="mensagemGlobal.tipo === 'success'" class="fa fa-solid fa-circle-check"></i>
-                <i ng-if="mensagemGlobal.tipo === 'error'" class="fa  fa-triangle-exclamation"></i>
-                <i ng-if="mensagemGlobal.tipo === 'warning'" class="fa fa-solid fa-triangle-exclamation"></i>
-                <i ng-if="mensagemGlobal.tipo === 'info'" class="fa fa-solid fa-circle-info"></i>
-                {{ mensagemGlobal.texto }}
-            </div>
-        </div>
-    </main>
+
+				<!-- Ícone de fechar posicionado no canto superior direito -->
+				<button type="button" class="btn-close position-absolute top-0 end-0 m-2" ng-show="mensagemGlobal"
+						ng-click="mensagemGlobal = null"></button>
+
+				<i ng-show="mensagemGlobal.tipo === 'success'" class="fa fs-3 fa-solid fa-circle-check"></i>
+				<i ng-show="mensagemGlobal.tipo === 'error'" class="fa fa-triangle-exclamation fs-3"></i>
+				<i ng-show="mensagemGlobal.tipo === 'warning'" class="fa fs-3 fa-solid fa-triangle-exclamation"></i>
+				<i ng-show="mensagemGlobal.tipo === 'info'" class="fa fa-solid fs-3 fa-circle-info"></i>
+				<span ng-bind="mensagemGlobal.texto"></span>
+			</div>
+		</div>
+
+	</main>
 </body>
 </html>

@@ -1,18 +1,26 @@
 ﻿(function () {
     const app = angular.module("app");
 
-    app.controller("LoginController", function ($scope, $http, $mensagem) {
+    app.controller("LoginController", function ($scope, $http, $mensagem, $rootScope) {
         $scope.iniciar = function () {
-            $mensagem.error("erro");
         };
 
         $scope.login = function () {
+            $rootScope.carregando = true; 
+
             $http.post('/api/Contas/Login', $scope.usuario)
                 .then(function (response) {
-                    console.log('Subtreino criado com sucesso:', response.data);
+                    if (!response.data.sucesso)
+                        $mensagem.error(`${response.data.mensagem}`);
+                    else {
+                        $messages.success(response.data.mensagem);
+                        location.href = "Home/"
+                    }
                 })
                 .catch(function (error) {
-                    console.error('Erro ao criar subtreino:', error);
+                    $mensagem.error("Erro ao fazer login");
+                }).finally(function () {
+                    $rootScope.carregando = false; 
                 });
         };
 

@@ -15,11 +15,14 @@
             },
             _mostrar: function (tipo, texto, duracao) {
                 $rootScope.mensagemGlobal = { tipo, texto };
+                this._limpar(duracao);
             },
-            _limpar: function () {
-                $rootScope.mensagemGlobal = null;
-            }
+            _limpar: function (duracao) {
+                $timeout(function () {
+                    $rootScope.mensagemGlobal = null;
+                }, duracao);
+            },
         };
     });
 
-    
+
