@@ -13,8 +13,8 @@
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
                     else {
-                        $messages.success(response.data.mensagem);
-                        location.href = "Home/"
+                        $mensagem.success(response.data.mensagem);
+                        location.href = "/Home"
                     }
                 })
                 .catch(function (error) {

@@ -12,8 +12,8 @@ public static class SessionConfiguration
         builder.Services.AddAuthentication("Cookies")
             .AddCookie("Cookies", options =>
             {
-                options.LoginPath = "/api/Contas/login";
-                options.LogoutPath = "/api/Contas/logout";
+                options.LoginPath = "/Conta/Login";
+                options.LogoutPath = "/api/Contas/Logout";
                 options.ExpireTimeSpan = TimeSpan.FromHours(8);
                 options.SlidingExpiration = true;
                 options.Cookie.HttpOnly = true;
