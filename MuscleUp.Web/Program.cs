@@ -1,10 +1,13 @@
 using MuscleUp.Web.Configurations;
+using MuscleUp.Dominio;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddDataBaseConfiguration();
 builder.AddSessionConfig();
 builder.Services.AddControllersWithViews();
+builder.Services.AddDominioServices();
+
 
 var app = builder.Build();
 
