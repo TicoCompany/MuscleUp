@@ -9,7 +9,7 @@
         $scope.listar = function () {
             $rootScope.carregando = true;
 
-            $http.get('/api/Usuarios')
+            $http.get('/api/Usuarios?page=' + $scope.filtro.pagina + '&pageSize=10')
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
