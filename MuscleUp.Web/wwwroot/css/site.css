@@ -2,8 +2,7 @@
     max-width: 450px !important;
     width: 100% !important;
 }
-
-.anterior-loader {
+    .anterior-loader {
     position: fixed;
     width: 100vw;
     height: 100vh;

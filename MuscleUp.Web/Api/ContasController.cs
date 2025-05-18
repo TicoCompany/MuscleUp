@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MuscleUp.Dominio.Auth;
+using MuscleUp.Dominio.Contas;
 using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.ViewModels.Contas;
 using System.Security.Claims;
@@ -10,28 +11,28 @@ namespace MuscleUp.Web.Api;
 public class ContasController : BaseApiController
 {
     private readonly IAppDbContext _appDbContext;
+    private readonly IContaService _contasService;
 
-    public ContasController(IAppDbContext appDbContext)
+    public ContasController(IAppDbContext appDbContext, IContaService contasService)
     {
         _appDbContext = appDbContext;
+        _contasService = contasService;
     }
+
     [AllowAnonymous]
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var usuario = _appDbContext.Usuarios.FirstOrDefault(u => u.Email == request.Email);
-        
-        if(usuario == null)
-            return Erro("E-mail não cadastrado");
+        var response = _contasService.Login(request);
 
-        if (usuario.Senha != request.Senha)
-            return Erro("Senha inválida");
+        if (!response.Sucesso)
+            return Erro(response.Mensagem!);
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, usuario.Nome),
-            new Claim(ClaimTypes.Email, usuario.Email),
-            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+            new Claim(ClaimTypes.Name, response.Dados!.Nome),
+            new Claim(ClaimTypes.Email, response.Dados!.Email),
+            new Claim(ClaimTypes.NameIdentifier, response.Dados!.Id.ToString()),
         };
 
         var authProperties = new AuthenticationProperties
@@ -47,9 +48,9 @@ public class ContasController : BaseApiController
 
         var usuarioSessao = new UsuarioSessaoModel
         {
-            Id = usuario.Id,
-            Nome = usuario.Nome,
-            Email = usuario.Email
+            Id = response.Dados!.Id,
+            Nome = response.Dados!.Nome,
+            Email = response.Dados!.Email
         };
 
         return Sucesso("Login realizado com sucesso!");

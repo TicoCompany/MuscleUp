@@ -1,5 +1,50 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@section Scripts {
+	<script src="~/js/usuario/module.js"></script>
 }
+<div class="container mt-4" ng-controller="UsuarioListController" ng-init="iniciar()">
+	<div class="row mb-3">
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-text">
+					<i class="fa fa-search"></i>
+				</span>
+				<input type="text" class="form-control" placeholder="Buscar..." ng-model="filtro.Busca">
+			</div>
+		</div>
+	</div>
+
+	<div class="text-end mb-3">
+		<a href="@Url.Action("Create", "Usuario")" class="btn btn-success">+ Adicionar</a>
+	</div>
+
+	<div class="table-responseive">
+		<table class="table table-hover ">
+			<thead class="">
+				<tr>
+					<th>#</th>
+					<th>Nome</th>
+					<th>Email</th>
+					<th> </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in usuarios">
+					<td>{{ $index + 1 }}</td>
+					<td>{{ item.nome }}</td>
+					<td>{{ item.email }}</td>
+					<td class="text-end">
+						<a class="btn btn-sm btn-primary me-1" ng-href="/Usuario/Create/{{item.id}}">
+							<i class="fa fa-edit"></i>
+						</a>
+						<button class="btn btn-sm btn-danger" ng-click="excluir(item.id)">
+							<i class="fa fa-trash"></i>
+						</button>
+					</td>
+				</tr>
+				<tr ng-if="usuarios.length === 0">
+					<td colspan="4" class="text-center text-muted">Nenhum resultado encontrado.</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

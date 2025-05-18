@@ -11,16 +11,6 @@
 </head>
 <loader-global></loader-global>
 <body>
-    <div ng-if="mensagemGlobal" class="alert mt-2"
-         ng-class="{
-       'alert-success': mensagemGlobal.tipo === 'success',
-       'alert-danger': mensagemGlobal.tipo === 'error',
-       'alert-warning': mensagemGlobal.tipo === 'warning',
-       'alert-info': mensagemGlobal.tipo === 'info'
-     }">
-        {{ mensagemGlobal.texto }}
-    </div>
-
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -35,7 +25,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li> 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Create">Usuário</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuário</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -51,6 +41,25 @@
         </main>
     </div>
 
+    <div class="container fixed-bottom d-flex justify-content-center mb-3">
+        <div ng-if="mensagemGlobal" class="alert alert-global d-flex align-items-center gap-3 w-auto position-relative py-4"
+             ng-class="{
+           'alert-success': mensagemGlobal.tipo === 'success',
+           'alert-danger': mensagemGlobal.tipo === 'error',
+           'alert-warning': mensagemGlobal.tipo === 'warning',
+           'alert-info': mensagemGlobal.tipo === 'info'
+         }">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" ng-show="mensagemGlobal"
+                    ng-click="mensagemGlobal = null"></button>
+
+            <i ng-show="mensagemGlobal.tipo === 'success'" class="fa fs-3 fa-solid fa-circle-check"></i>
+            <i ng-show="mensagemGlobal.tipo === 'error'" class="fa fa-triangle-exclamation fs-3"></i>
+            <i ng-show="mensagemGlobal.tipo === 'warning'" class="fa fs-3 fa-solid fa-triangle-exclamation"></i>
+            <i ng-show="mensagemGlobal.tipo === 'info'" class="fa fa-solid fs-3 fa-circle-info"></i>
+            <span ng-bind="mensagemGlobal.texto"></span>
+        </div>
+    </div>
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - MuscleUp.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

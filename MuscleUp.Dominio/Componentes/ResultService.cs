@@ -3,7 +3,7 @@
 public class ResultService<T>
 {
     public bool Sucesso { get; init; }
-    public string? Mensagem { get; init; }
+    public string? Mensagem { get; init; } = "";
     public T? Dados { get; init; }
 
     public static ResultService<T> Ok(T dados, string? mensagem = null) =>
