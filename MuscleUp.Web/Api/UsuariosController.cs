@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MuscleUp.Dominio.DataBase;
+using MuscleUp.Dominio.Pagination;
 using MuscleUp.Dominio.Usuarios;
 using MuscleUp.Dominio.ViewModels.Usuarios;
 
@@ -36,7 +38,7 @@ public class UsuariosController : BaseApiController
     }
 
     [HttpGet]
-    public IActionResult List()
+    public async Task<IActionResult> List()
     {
         try
         {
@@ -44,7 +46,9 @@ public class UsuariosController : BaseApiController
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
 
-            return Sucesso(result.Dados!.Select(q => new
+            var paginedQuery = await PaginatedList<Usuario>.CreateAsync(result.Dados!, 2, 10);
+
+            return Sucesso(paginedQuery.Items!.Select(q => new
             {
                 q.Nome,
                 q.Email,

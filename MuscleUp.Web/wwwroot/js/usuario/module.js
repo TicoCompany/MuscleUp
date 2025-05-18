@@ -24,21 +24,27 @@
         };
 
         $scope.excluir = function (id) {
-            $rootScope.carregando = true;
-
-            $http.delete(`/api/Usuarios/${id}`)
-                .then(function (response) {
-                    if (!response.data.sucesso)
-                        $mensagem.error(`${response.data.mensagem}`);
-                    else {
-                        $mensagem.success(response.data.mensagem);
-                        $scope.listar();
+            $mensagem.confirm("Deseja realmente excluir este usuário?")
+                .then(function (resposta) {
+                    if (resposta) {
+                        $rootScope.carregando = true;
+                        $http.delete(`/api/Usuarios/${id}`)
+                            .then(function (response) {
+                                if (!response.data.sucesso)
+                                    $mensagem.error(`${response.data.mensagem}`);
+                                else {
+                                    $mensagem.success(response.data.mensagem);
+                                    $scope.listar();
+                                }
+                            }, function (error) {
+                                $mensagem.error("Erro ao excluír o usuário");
+                            }).finally(function () {
+                                $rootScope.carregando = false;
+                            });
                     }
-                }, function (error) {
-                    $mensagem.error("Erro ao excluír o usuário");
-                }).finally(function () {
-                    $rootScope.carregando = false;
                 });
+
+
         };
 
     });

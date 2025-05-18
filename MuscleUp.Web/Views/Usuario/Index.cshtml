@@ -1,7 +1,12 @@
-﻿@section Scripts {
+﻿@{
+	ViewBag.Title = "Usuários";
+}
+@section Scripts {
 	<script src="~/js/usuario/module.js"></script>
 }
 <div class="container mt-4" ng-controller="UsuarioListController" ng-init="iniciar()">
+	<h2 class=fw-bold>@ViewBag.Title</h2>
+
 	<div class="row mb-3">
 		<div class="col-md-6">
 			<div class="input-group">
@@ -29,7 +34,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="item in usuarios">
-					<td>{{ $index + 1 }}</td>
+					<td>{{ item.id}}</td>
 					<td>{{ item.nome }}</td>
 					<td>{{ item.email }}</td>
 					<td class="text-end">

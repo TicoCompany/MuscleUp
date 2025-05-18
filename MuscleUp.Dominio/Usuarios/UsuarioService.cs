@@ -7,7 +7,7 @@ namespace MuscleUp.Dominio.Usuarios;
 public interface IUsuarioService
 {
     ResultService<int?> Salvar(UsuarioRequest request);
-    ResultService<List<Usuario>> Listar();
+    ResultService<IQueryable<Usuario>> Listar();
     ResultService<Usuario?> BuscarPorId(int id);
     ResultService<int?> Deletar(int id);
 
@@ -48,12 +48,12 @@ internal class UsuarioService : IUsuarioService
         return ResultService<int?>.Ok(null, "Usuário salvo com sucesso!");
     }
 
-    public ResultService<List<Usuario>> Listar()
+    public ResultService<IQueryable<Usuario>> Listar()
     {
 
-        var usuarios = _appDbContext.Usuarios.AsNoTracking().ToList();
+        var usuarios = _appDbContext.Usuarios.AsNoTracking().AsQueryable();
 
-        return ResultService<List<Usuario>>.Ok(usuarios, "Usuário salvo com sucesso!");
+        return ResultService<IQueryable<Usuario>>.Ok(usuarios, "Usuário salvo com sucesso!");
     }
 
     public ResultService<int?> Deletar(int id)
