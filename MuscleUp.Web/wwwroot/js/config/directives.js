@@ -24,38 +24,32 @@ app.directive("loaderGlobal", function () {
     };
 });
 
-app.directive('paginador', function () {
+app.directive('paginador', function ($timeout) {
     return {
         restrict: 'E',
         scope: {
-            aoPaginar: '&',    
-            totalPaginas: '=', 
+            aoPaginar: '&',
+            totalPaginas: '=',
             paginaAtual: '='
         },
         template: `
         <nav>
-          <ul class="pagination justify-content-center">
-            <li class="page-item" ng-class="{ disabled: paginaAtual === 1 }">
-              <button class="page-link" ng-click="irParaPagina(paginaAtual - 1)">Anterior</button>
-            </li>
-
-            <li class="page-item" ng-repeat="n in getPaginas()" ng-class="{ active: n === paginaAtual }">
-              <button class="page-link" ng-click="irParaPagina(n)">{{ n }}</button>
-            </li>
-
-            <li class="page-item" ng-class="{ disabled: paginaAtual === totalPaginas }">
-              <button class="page-link" ng-click="irParaPagina(paginaAtual + 1)">Próxima</button>
-            </li>
-          </ul>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" ng-class="{ disabled: paginaAtual === 1 }">
+                    <button class="page-link" ng-click="irParaPagina(paginaAtual - 1)">Anterior</button>
+                </li>
+                <li class="page-item"
+                    ng-repeat="n in getPaginas()"
+                    ng-class="{ active: n === paginaAtual }">
+                    <button class="page-link" ng-click="irParaPagina(n)">{{ n }}</button>
+                </li>
+                <li class="page-item" ng-class="{ disabled: paginaAtual === totalPaginas }">
+                    <button class="page-link" ng-click="irParaPagina(paginaAtual + 1)">Próxima</button>
+                </li>
+            </ul>
         </nav>
-      `,
+        `,
         link: function (scope) {
-            scope.irParaPagina = function (pagina) {
-                if (pagina < 1 || pagina > scope.totalPaginas) return;
-                scope.paginaAtual = pagina;
-                scope.aoPaginar({ pagina: pagina });
-            };
-
             scope.getPaginas = function () {
                 var paginas = [];
                 for (var i = 1; i <= scope.totalPaginas; i++) {
@@ -63,6 +57,20 @@ app.directive('paginador', function () {
                 }
                 return paginas;
             };
+
+            scope.irParaPagina = function (pagina) {
+                if (pagina < 1 || pagina > scope.totalPaginas) return;
+                scope.paginaAtual = pagina;
+
+                paginar();
+            };
+
+            function paginar() {
+                $timeout(function () {
+                    scope.aoPaginar();
+                }, 0)
+            }
         }
     };
+
 });

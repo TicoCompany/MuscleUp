@@ -39,7 +39,7 @@ public class UsuariosController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> List([FromBody] PaginationFilter filter)
+    public async Task<IActionResult> List([FromQuery] PaginationFilter filter)
     {
         try
         {
@@ -47,14 +47,18 @@ public class UsuariosController : BaseApiController
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
 
-            var paginedQuery = await PaginatedList<Usuario>.CreateAsync(result.Dados!, filter.Page, filter.QuantidadeDeItens);
+            var paginedQuery = await PaginatedList<Usuario>.CreateAsync(result.Dados!, filter.Pagina, filter.PorPagina);
 
-            return Sucesso(paginedQuery.Items!.Select(q => new
+            return Sucesso(new
             {
-                q.Nome,
-                q.Email,
-                q.Id,
-            }));
+                Usuarios = paginedQuery.Items!.Select(q => new
+                {
+                    q.Nome,
+                    q.Email,
+                    q.Id,
+                }),
+                TotalPaginas = paginedQuery.TotalPages
+            });
 
         }
         catch (Exception ex)
