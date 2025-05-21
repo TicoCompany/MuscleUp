@@ -53,7 +53,7 @@ internal class UsuarioService : IUsuarioService
 
         var usuarios = _appDbContext.Usuarios.AsNoTracking().AsQueryable();
 
-        return ResultService<IQueryable<Usuario>>.Ok(usuarios, "Usuário salvo com sucesso!");
+        return ResultService<IQueryable<Usuario>>.Ok(usuarios);
     }
 
     public ResultService<int?> Deletar(int id)

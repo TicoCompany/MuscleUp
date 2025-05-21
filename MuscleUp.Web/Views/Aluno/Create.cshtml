@@ -1,0 +1,53 @@
+﻿@model int?
+@{
+	ViewBag.Title = "Aluno";
+}
+@section Scripts {
+	<script src="~/js/aluno/module.js"></script>
+}
+
+<div ng-controller="AlunoController" ng-init="iniciar(@Model)" class="container">
+
+	<h2 class="fw-bold"> @ViewBag.Title</h2>
+	<form class="row" ng-submit="salvar()">
+
+		<div class="mb-3 col-lg-6 col-lg-6">
+			<label for="Nome" class="form-label">Nome</label>
+			<input type="text" ng-model="aluno.nome" required class="form-control" id="Nome">
+		</div>
+
+		<div class="mb-3 col-lg-6">
+			<label for="Email" class="form-label">E-mail</label>
+			<input type="email" ng-model="aluno.email" required class="form-control" id="Email">
+		</div>
+
+
+		<div class="mb-3 col-lg-6">
+			<label for="Peso" class="form-label">Peso</label>
+			<input class="form-control" ng-model="aluno.peso">
+		</div>
+
+		<div class="mb-3 col-lg-6">
+			<label for="Peso" class="form-label">Altura</label>
+			<input class="form-control" ng-model="aluno.altura">
+		</div>
+
+		<div class="mb-3 col-lg-6">
+			<label for="Peso" class="form-label">Objetivo</label>
+			<textarea class="form-control" ng-model="aluno.objetivo"></textarea>
+		</div>
+
+		<div class="mb-3 col-lg-6">
+			<label for="Peso" class="form-label">Problemas médicos</label>
+			<textarea class="form-control" ng-model="aluno.problemasMedicos"></textarea>
+		</div>
+		<span class="form-text"> A senha vai ser enviada no e-mail do aluno</span>
+
+		<div class="d-flex gap-2 justify-content-end">
+			<a href="@Url.Action("Index", "Aluno")" class="btn btn-secondary"> Voltar</a>
+			<button type="submit" class="btn btn-primary">Salvar</button>
+		</div>
+
+
+	</form>
+</div>

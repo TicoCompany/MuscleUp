@@ -1,4 +1,6 @@
-﻿namespace MuscleUp.Dominio.Usuarios;
+﻿using MuscleUp.Dominio.Alunos;
+
+namespace MuscleUp.Dominio.Usuarios;
 
 public class Usuario
 {
@@ -6,4 +8,7 @@ public class Usuario
     public string Nome { get; set; }
     public string Email { get; set; }
     public string Senha { get; set; }
+    public string? Telefone { get; set; }
+
+    public virtual Aluno? Aluno { get; set; }    
 }
