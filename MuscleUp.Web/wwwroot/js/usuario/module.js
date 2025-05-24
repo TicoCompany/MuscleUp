@@ -1,20 +1,25 @@
 ﻿(function () {
     const app = angular.module("app");
 
-    app.controller("UsuarioListController", function ($scope, $http, $mensagem, $rootScope) {
+    app.controller("UsuarioListController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
         $scope.iniciar = function () {
+            $scope.filtros = {
+                pagina: 1,
+                porPagina: 10
+            };
             $scope.listar();
         };
 
         $scope.listar = function () {
             $rootScope.carregando = true;
 
-            $http.get('/api/Usuarios')
+            $http.get('/api/Usuarios?pagina=' + $scope.filtros.pagina + '&porPagina=' + $scope.filtros.porPagina)
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
                     else {
-                        $scope.usuarios = response.data.data;
+                        $scope.usuarios = response.data.data.usuarios;
+                        $scope.filtros.totalPaginas = response.data.data.totalPaginas;
                     }
                 }, function (error) {
                     $mensagem.error("Erro ao listar usuários");

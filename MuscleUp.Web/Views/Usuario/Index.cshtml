@@ -13,7 +13,7 @@
 				<span class="input-group-text">
 					<i class="fa fa-search"></i>
 				</span>
-				<input type="text" class="form-control" placeholder="Buscar..." ng-model="filtro.Busca">
+				<input type="text" class="form-control" placeholder="Buscar..." ng-model="filtros.busca">
 			</div>
 		</div>
 	</div>
@@ -23,7 +23,7 @@
 	</div>
 
 	<div class="table-responseive">
-		<table class="table table-hover ">
+		<table class="table table-hover table-sm ">
 			<thead class="">
 				<tr>
 					<th>#</th>
@@ -51,5 +51,10 @@
 				</tr>
 			</tbody>
 		</table>
+
+		<paginador ao-paginar="listar()"
+				   pagina-atual="filtros.pagina"
+				   total-paginas="filtros.totalPaginas">
+		</paginador>
 	</div>
 </div>
