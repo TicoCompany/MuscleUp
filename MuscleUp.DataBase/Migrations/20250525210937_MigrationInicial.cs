@@ -15,11 +15,41 @@ namespace MuscleUp.DataBase.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Academias",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nome = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Cnpj = table.Column<string>(type: "varchar(18)", maxLength: 18, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Cep = table.Column<string>(type: "varchar(9)", maxLength: 9, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Logradouro = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Bairro = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Estado = table.Column<string>(type: "varchar(2)", maxLength: 2, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Cidade = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Numero = table.Column<string>(type: "varchar(16)", maxLength: 16, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Academias", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Usuarios",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IdAcademia = table.Column<int>(type: "int", nullable: true),
                     Nome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "longtext", nullable: false)
@@ -32,6 +62,12 @@ namespace MuscleUp.DataBase.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Academias_IdAcademia",
+                        column: x => x.IdAcademia,
+                        principalTable: "Academias",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -58,6 +94,11 @@ namespace MuscleUp.DataBase.Migrations
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_IdAcademia",
+                table: "Usuarios",
+                column: "IdAcademia");
         }
 
         /// <inheritdoc />
@@ -68,6 +109,9 @@ namespace MuscleUp.DataBase.Migrations
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
+
+            migrationBuilder.DropTable(
+                name: "Academias");
         }
     }
 }

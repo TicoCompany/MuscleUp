@@ -22,6 +22,52 @@ namespace MuscleUp.DataBase.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("MuscleUp.Dominio.Academias.Academia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bairro")
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("Cep")
+                        .HasMaxLength(9)
+                        .HasColumnType("varchar(9)");
+
+                    b.Property<string>("Cidade")
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("Cnpj")
+                        .HasMaxLength(18)
+                        .HasColumnType("varchar(18)");
+
+                    b.Property<string>("Estado")
+                        .HasMaxLength(2)
+                        .HasColumnType("varchar(2)");
+
+                    b.Property<string>("Logradouro")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+                    b.Property<string>("Numero")
+                        .HasMaxLength(16)
+                        .HasColumnType("varchar(16)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Academias");
+                });
+
             modelBuilder.Entity("MuscleUp.Dominio.Alunos.Aluno", b =>
                 {
                     b.Property<int>("IdUsuario")
@@ -58,6 +104,9 @@ namespace MuscleUp.DataBase.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("IdAcademia")
+                        .HasColumnType("int");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -72,6 +121,8 @@ namespace MuscleUp.DataBase.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IdAcademia");
+
                     b.ToTable("Usuarios");
                 });
 
@@ -84,6 +135,21 @@ namespace MuscleUp.DataBase.Migrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("MuscleUp.Dominio.Usuarios.Usuario", b =>
+                {
+                    b.HasOne("MuscleUp.Dominio.Academias.Academia", "Academia")
+                        .WithMany("Usuarios")
+                        .HasForeignKey("IdAcademia")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Academia");
+                });
+
+            modelBuilder.Entity("MuscleUp.Dominio.Academias.Academia", b =>
+                {
+                    b.Navigation("Usuarios");
                 });
 
             modelBuilder.Entity("MuscleUp.Dominio.Usuarios.Usuario", b =>

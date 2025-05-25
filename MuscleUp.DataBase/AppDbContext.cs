@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MuscleUp.Dominio.Academias;
 using MuscleUp.Dominio.Alunos;
 using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.Usuarios;
@@ -10,6 +11,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<Academia> Academias { get; set; }
     public DbSet<Aluno> Alunos { get; set; }
 
     public int SaveChanges()
