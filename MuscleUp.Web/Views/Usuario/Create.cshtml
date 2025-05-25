@@ -1,36 +1,35 @@
 ﻿@model int?
 @{
-
+	ViewBag.Title = "Usuário";
 }
 @section Scripts {
 	<script src="~/js/usuario/module.js"></script>
 }
 
 <div ng-controller="UsuarioController" ng-init="iniciar(@Model)" class="container">
-	<div class="">
-		<form ng-submit="salvar()">
-			<div class="mb-3">
-				<label for="Nome" class="form-label">Nome</label>
-				<input type="text" ng-model="usuario.nome" required class="form-control" id="Nome">
-			</div>
+	<h2 class="fw-bold"> @ViewBag.Title</h2>
+	<form ng-submit="salvar()">
+		<div class="mb-3">
+			<label for="Nome" class="form-label">Nome</label>
+			<input type="text" ng-model="usuario.nome" required class="form-control" id="Nome">
+		</div>
 
-			<div class="mb-3">
-				<label for="Email" class="form-label">E-mail</label>
-				<input type="email" ng-model="usuario.email" required class="form-control" id="Email">
-			</div>
-			<div class="mb-3">
-				<label for="Senha" class="form-label">Senha</label>
-				<input type="password" class="form-control" ng-model="usuario.senha" id="Senha">
-				@if (Model != null)
-				{
-					<span class="form-text">Caso não queira alterar a senha deixe em branco</span>
-				}
-			</div>
-			<div class="d-flex gap-2 justify-content-end">
-				<a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary"> Voltar</a>
+		<div class="mb-3">
+			<label for="Email" class="form-label">E-mail</label>
+			<input type="email" ng-model="usuario.email" required class="form-control" id="Email">
+		</div>
+		<div class="mb-3">
+			<label for="Senha" class="form-label">Senha</label>
+			<input type="password" class="form-control" ng-model="usuario.senha" id="Senha">
+			@if (Model != null)
+			{
+				<span class="form-text">Caso não queira alterar a senha deixe em branco</span>
+			}
+		</div>
+		<div class="d-flex gap-2 justify-content-end">
+			<a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary"> Voltar</a>
 			<button type="submit" class="btn btn-primary">Salvar</button>
-			</div>
+		</div>
 
-		</form>
-	</div>
+	</form>
 </div>
