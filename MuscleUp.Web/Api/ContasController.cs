@@ -56,11 +56,4 @@ public class ContasController : BaseApiController
         return Sucesso("Login realizado com sucesso!");
     }
 
-    [HttpGet("Logout")]
-    public async Task<IActionResult> Logout()
-    {
-        await HttpContext.SignOutAsync("Cookies");
-        return Ok(new { message = "Logout realizado com sucesso" });
-    }
-
 }

@@ -22,4 +22,8 @@
     <ProjectReference Include="..\MuscleUp.Dominio\MuscleUp.Dominio.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>

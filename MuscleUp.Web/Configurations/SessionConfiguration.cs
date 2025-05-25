@@ -13,7 +13,7 @@ public static class SessionConfiguration
             .AddCookie("Cookies", options =>
             {
                 options.LoginPath = "/Conta/Login";
-                options.LogoutPath = "/api/Contas/Logout";
+                options.LogoutPath = "/Conta/Logout";
                 options.ExpireTimeSpan = TimeSpan.FromHours(8);
                 options.SlidingExpiration = true;
                 options.Cookie.HttpOnly = true;
