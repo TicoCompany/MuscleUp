@@ -1,34 +1,38 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MuscleUp.Dominio.Componentes;
 using MuscleUp.Dominio.DataBase;
+using MuscleUp.Dominio.Mensageria;
 using MuscleUp.Dominio.Usuarios;
 using MuscleUp.Dominio.ViewModels.Alunos;
 
 namespace MuscleUp.Dominio.Alunos;
 public interface IAlunoService
 {
-    ResultService<int?> Salvar(AlunoRequest request);
+    Task<ResultService<int?>> Salvar(AlunoRequest request);
     ResultService<IQueryable<Aluno>> Listar();
     ResultService<Aluno?> BuscarPorId(int id);
     ResultService<int?> Deletar(int id);
 }
-internal class AlunoService : IAlunoService 
+internal class AlunoService : IAlunoService
 {
     private readonly IAppDbContext _appDbContext;
+    private readonly IEnviadorDeEmail _enviadorDeEmail;
 
-    public AlunoService(IAppDbContext appDbContext)
+    public AlunoService(IAppDbContext appDbContext, IEnviadorDeEmail enviadorDeEmail)
     {
         _appDbContext = appDbContext;
+        _enviadorDeEmail = enviadorDeEmail;
     }
 
-    public ResultService<int?> Salvar(AlunoRequest request)
+    public async Task<ResultService<int?>> Salvar(AlunoRequest request)
     {
         var usuarioDoBanco = _appDbContext.Usuarios.AsNoTracking().FirstOrDefault(q => q.Id == request.Id);
         string? senhaNova = null;
+        string? senhaEncriptografada = null;
         if (usuarioDoBanco == null)
         {
-            senhaNova = "teste";
-            senhaNova = BCrypt.Net.BCrypt.HashPassword(senhaNova);
+            senhaNova = GeradorSenha.GerarSenha();
+            senhaEncriptografada = BCrypt.Net.BCrypt.HashPassword(senhaNova);
         }
 
         var usuario = new Usuario
@@ -36,7 +40,7 @@ internal class AlunoService : IAlunoService
             Id = request.Id ?? 0,
             Nome = request.Nome,
             Email = request.Email,
-            Senha = senhaNova != null ? senhaNova : usuarioDoBanco!.Senha,
+            Senha = senhaEncriptografada != null ? senhaEncriptografada : usuarioDoBanco!.Senha,
         };
 
         if (request.Id != null)
@@ -61,6 +65,17 @@ internal class AlunoService : IAlunoService
             _appDbContext.Alunos.Add(aluno);
 
         _appDbContext.SaveChanges();
+
+        if (!string.IsNullOrWhiteSpace(senhaNova))
+        {
+
+            var emailModel = new EmailModel
+            {
+                EmailDoDestinatario = usuario.Email,
+                Nome = usuario.Nome,
+            };
+            await _enviadorDeEmail.EnviarSenhaParaAluno(emailModel, "MuscleUp", senhaNova);
+        }
 
 
         return ResultService<int?>.Ok(null, "Aluno salvo com sucesso!");

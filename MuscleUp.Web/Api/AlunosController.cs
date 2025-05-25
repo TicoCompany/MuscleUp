@@ -19,11 +19,11 @@ public class AlunosController : BaseApiController
     }
 
     [HttpPost]
-    public IActionResult Salvar([FromBody] AlunoRequest request)
+    public async Task<IActionResult> Salvar([FromBody] AlunoRequest request)
     {
         try
         {
-            var result = _alunoService.Salvar(request);
+            var result = await _alunoService.Salvar(request);
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
 
