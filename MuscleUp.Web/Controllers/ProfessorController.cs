@@ -12,6 +12,17 @@ public class ProfessorController : BaseController
 
     public IActionResult Index()
     {
+        var academias = _appDbContext.Academias.AsNoTracking();
+
+        ViewBag.Json = new
+        {
+            Academias = academias.Select(q => new
+            {
+                q.Id,
+                q.Nome
+            }),
+        };
+
         return View();
     }
 

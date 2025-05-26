@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.Filters;
 using MuscleUp.Dominio.Pagination;
 using MuscleUp.Dominio.Professores;
@@ -11,12 +10,10 @@ namespace MuscleUp.Web.Api;
 public class ProfessoresController : BaseApiController
 {
 
-    private readonly IAppDbContext _appDbContext;
     private readonly IProfessorService _professorService;
 
-    public ProfessoresController(IAppDbContext appDbContext, IProfessorService professorService)
+    public ProfessoresController(IProfessorService professorService)
     {
-        _appDbContext = appDbContext;
         _professorService = professorService;
     }
 
@@ -25,9 +22,13 @@ public class ProfessoresController : BaseApiController
     {
         try
         {
+            if (!request.IdAcademia.HasValue)
+                request.IdAcademia = UsuarioLogado.Id;
+
             var result = _professorService.Salvar(request);
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
+
 
             return Sucesso("Professor salvo com suceso!");
 
@@ -50,12 +51,13 @@ public class ProfessoresController : BaseApiController
             var paginedQuery = await PaginatedList<Usuario>.CreateAsync(result.Dados!, filter.Pagina, filter.PorPagina);
 
             return Sucesso(new
-            {
-                Professors = paginedQuery.Items!.Select(q => new
+            {   
+                Professores = paginedQuery.Items!.Select(q => new
                 {
                     q.Nome,
                     q.Email,
                     q.Id,
+                    nomeDaAcademia = q.Academia!.Nome,
                 }),
                 TotalPaginas = paginedQuery.TotalPages
             });

@@ -33,6 +33,7 @@ public class ContasController : BaseApiController
             new Claim(ClaimTypes.Name, response.Dados!.Nome),
             new Claim(ClaimTypes.Email, response.Dados!.Email),
             new Claim(ClaimTypes.NameIdentifier, response.Dados!.Id.ToString()),
+             new Claim("IdAcademia", response.Dados!.IdAcademia?.ToString() ?? string.Empty)
         };
 
         var authProperties = new AuthenticationProperties
@@ -45,13 +46,6 @@ public class ContasController : BaseApiController
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
         await HttpContext.SignInAsync("Cookies", claimsPrincipal);
-
-        var usuarioSessao = new UsuarioSessaoModel
-        {
-            Id = response.Dados!.Id,
-            Nome = response.Dados!.Nome,
-            Email = response.Dados!.Email
-        };
 
         return Sucesso("Login realizado com sucesso!");
     }

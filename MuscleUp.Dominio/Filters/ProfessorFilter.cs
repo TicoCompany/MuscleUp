@@ -2,5 +2,5 @@
 
 public sealed record ProfessorFilter : PaginationFilter
 {
-    public int IdAcademia { get; set; }
+    public int? IdAcademia { get; set; }
 }

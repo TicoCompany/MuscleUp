@@ -41,6 +41,7 @@ internal class ProfessorService : IProfessorService
             Nome = request.Nome,
             Email = request.Email,
             Senha = hash != null ? hash : usuarioDoBanco!.Senha,
+            IdAcademia = request.IdAcademia
         };
 
         if (request.Id != null)
@@ -55,10 +56,14 @@ internal class ProfessorService : IProfessorService
 
     public ResultService<IQueryable<Usuario>> Listar(ProfessorFilter filter)
     {
-        var professores = _appDbContext.Usuarios.Where(q => q.Id == filter.IdAcademia).AsNoTracking().AsQueryable();
+        var professores = _appDbContext.Usuarios.Include(q => q.Academia).AsNoTracking().Where(q => q.IdAcademia != null).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filter.Busca))
             professores = professores.Where(q => q.Nome.Contains(filter.Busca));
+
+        if (filter.IdAcademia.HasValue)
+            professores = professores.Where(q => q.IdAcademia == filter.IdAcademia);
+
 
         return ResultService<IQueryable<Usuario>>.Ok(professores);
     }

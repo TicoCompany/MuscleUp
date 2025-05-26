@@ -2,6 +2,7 @@
 using MuscleUp.Dominio.Alunos;
 using MuscleUp.Dominio.Contas;
 using MuscleUp.Dominio.Mensageria;
+using MuscleUp.Dominio.Professores;
 using MuscleUp.Dominio.Usuarios;
 
 namespace MuscleUp.Dominio;
@@ -19,6 +20,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IUsuarioService, UsuarioService>();
         services.AddScoped<IAlunoService, AlunoService>();
         services.AddScoped<IContaService, ContaService>();
+        services.AddScoped<IProfessorService, ProfessorService>();
 
     }
 

@@ -2,12 +2,14 @@
     const app = angular.module("app");
 
     app.controller("ProfessorListController", function ($scope, $http, $mensagem, $rootScope) {
-        $scope.iniciar = function () {
+        $scope.iniciar = function (json) {
             $scope.filtros = {
                 pagina: 1,
                 porPagina: 10
             };
             $scope.listar();
+
+            $scope.academias = json.Academias;
         };
 
         $scope.listar = function () {
@@ -18,7 +20,7 @@
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
                     else {
-                        $scope.Professores = response.data.data.professores;
+                        $scope.professores = response.data.data.professores;
                         $scope.filtros.totalPaginas = response.data.data.totalPaginas;
                     }
                 }, function (error) {
@@ -54,6 +56,7 @@
 
     app.controller("ProfessorController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
         $scope.iniciar = function (json) {
+            console.log(json);
             if (json.Id) {
                 $http.get(`/api/Professores/${json.Id}`)
                     .then(function (response) {
@@ -69,14 +72,13 @@
                     });
             }
 
-            console.log(json);
-            $scope.academias = json.academias;
+            $scope.academias = json.Academias;
         };
 
         $scope.salvar = function () {
             $rootScope.carregando = true;
 
-            $http.post('/api/Professores', $scope.Professor)
+            $http.post('/api/Professores', $scope.professor)
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);

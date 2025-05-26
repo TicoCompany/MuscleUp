@@ -1,46 +1,55 @@
 ﻿@using System.Text.Json
 @{
-	ViewBag.Title = "Professor";
-	var json = Html.Raw(JsonSerializer.Serialize(ViewBag.Json));
+    ViewBag.Title = "Professor";
+    var json = System.Text.Json.JsonSerializer.Serialize(ViewBag.Json);
 }
 @section Scripts {
-	<script src="~/js/professor/module.js"></script>z
+    <script src="~/js/professor/module.js"></script>z
 }
 
-<div ng-controller="ProfessorController" ng-init="iniciar(@json)" class="container">
+<div ng-controller="ProfessorController" ng-init='iniciar(@Html.Raw(json))' class="container">
 
-	<h2 class="fw-bold"> @ViewBag.Title</h2>
-	<form class="row" ng-submit="salvar()">
+    <h2 class="fw-bold"> @ViewBag.Title</h2>
+    <form class="row" ng-submit="salvar()">
 
-		<div class="mb-3 col-lg-6 col-lg-6">
-			<label for="Nome" class="form-label">Nome</label>
-			<input type="text" ng-model="professor.nome" required class="form-control" id="Nome">
-		</div>
+        <div class="mb-3 col-lg-6 col-lg-6">
+            <label class="form-label" for="academiaSelect">Selecione uma academia:</label>
 
-		<div class="mb-3 col-lg-6">
-			<label for="Email" class="form-label">E-mail</label>
-			<input type="email" ng-model="professor.email" required class="form-control" id="Email">
-		</div>
+            <select id="academiaSelect"
+                    class="form-select"
+                    ng-model="professor.IdAcademia"
+                    ng-options="academia.Id as academia.Nome for academia in academias">
+            </select>
+        </div>
 
-		<div class="mb-3 col-lg-6">
-			<label for="Senha" class="form-label">Senha</label>
-			<input type="password" class="form-control" ng-model="professor.senha" id="Senha">
-			@if (Model != null)
-			{
-				<span class="form-text">Caso não queira alterar a senha deixe em branco</span>
-			}
-		</div>
-		<span class="form-text"> A senha vai ser enviada no e-mail do professor</span>
+        <div class="mb-3 col-lg-6 col-lg-6">
+            <label for="Nome" class="form-label">Nome</label>
+            <input type="text" ng-model="professor.nome" required class="form-control" id="Nome">
+        </div>
 
-		<div class="mb-3 col-lg-6">
-			<label for="Peso" class="form-label">DataDeNascimento</label>
-			<input class="form-control" type="number" min="2" ng-model="professor.peso">
-		</div>
+        <div class="mb-3 col-lg-6">
+            <label for="Email" class="form-label">E-mail</label>
+            <input type="email" ng-model="professor.email" required class="form-control" id="Email">
+        </div>
 
-		<div class="d-flex gap-2 justify-content-end">
-			<a href="@Url.Action("Index", "Professor")" class="btn btn-secondary"> Voltar</a>
-			<button type="submit" class="btn btn-primary">Salvar</button>
-		</div>
+        <div class="mb-3 col-lg-6">
+            <label for="Senha" class="form-label">Senha</label>
+            <input type="password" class="form-control" ng-model="professor.senha" id="Senha">
+            @if (Model != null)
+            {
+                <span class="form-text">Caso não queira alterar a senha deixe em branco</span>
+            }
+        </div>
 
-	</form>
+        <div class="mb-3 col-lg-6">
+            <label for="Peso" class="form-label">Data de nascimento</label>
+            <input class="form-control" type="date" ng-model="professor.dataDeNascimento">
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end">
+            <a href="@Url.Action("Index", "Professor")" class="btn btn-secondary"> Voltar</a>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+
+    </form>
 </div>
