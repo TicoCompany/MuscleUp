@@ -4,7 +4,12 @@ namespace MuscleUp.Web.Controllers;
 
 public class UsuarioController : BaseController
 {
-    public IActionResult Index() => View();
+    public IActionResult Index()
+    {
+        var usuario = UsuarioLogado;
+        return View();
+    }
+
     public IActionResult Create(int? id) => View(id);
 
 }

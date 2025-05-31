@@ -1,12 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using MuscleUp.Dominio.Auth
+<!DOCTYPE html>
 <html lang="pt-br" ng-app="app">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - MuscleUp</title>
-
-	@await Html.PartialAsync("_ValidationScriptsPartial")
-	@await RenderSectionAsync("Scripts", required: false)
+	<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+	<link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="~/css/site.css" />
 
 </head>
 <loader-global></loader-global>
@@ -19,6 +20,7 @@
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
+
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 					<ul class="navbar-nav flex-grow-1">
 						<li class="nav-item">
@@ -36,7 +38,24 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Professor" asp-action="Index">Professor</a>
 						</li>
+
 					</ul>
+
+					<div class="dropdown me-3">
+						<a class="dropdown-toggle text-decoration-none text-dark" href="javascript:;"
+								id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+							@User.Identity?.Name
+						</a>
+						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+							<li><a class="dropdown-item" asp-controller="Conta" asp-action="Perfil">Ver Perfil</a></li>
+							<li><hr class="dropdown-divider" /></li>
+							<li>
+								<form asp-controller="Conta" asp-action="Logout" class="d-inline">
+									<button type="submit" class="dropdown-item">Sair</button>
+								</form>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</nav>
@@ -72,5 +91,9 @@
 		</div>
 	</footer>
 
+	<script src="~/lib/bootstrap/newJs/bootstrap.bundle.min.js"></script>
+
+	@await Html.PartialAsync("_ValidationScriptsPartial")
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
