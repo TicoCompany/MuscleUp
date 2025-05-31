@@ -1,4 +1,5 @@
-﻿using MuscleUp.Dominio.Usuarios;
+﻿using MuscleUp.Dominio.Exercicios;
+using MuscleUp.Dominio.Usuarios;
 
 namespace MuscleUp.Dominio.Academias;
 
@@ -15,4 +16,6 @@ public class Academia
     public string? Numero { get; set; }
 
     public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+    public virtual ICollection<Exercicio> Exercicios { get; set; } = new List<Exercicio>();
+
 }
