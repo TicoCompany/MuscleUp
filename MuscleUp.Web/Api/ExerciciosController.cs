@@ -1,31 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MuscleUp.Dominio.Filters;
 using MuscleUp.Dominio.Pagination;
-using MuscleUp.Dominio.Professores;
-using MuscleUp.Dominio.Usuarios;
-using MuscleUp.Dominio.ViewModels.Professores;
+using MuscleUp.Dominio.Exercicios;
+using MuscleUp.Dominio.ViewModels.Exercicios;
 
 namespace MuscleUp.Web.Api;
 
-public class ProfessoresController : BaseApiController
+public class ExerciciosController : BaseApiController
 {
+    private readonly IExercicioService _exercicioService;
 
-    private readonly IProfessorService _professorService;
-
-    public ProfessoresController(IProfessorService professorService)
+    public ExerciciosController(IExercicioService exercicio)
     {
-        _professorService = professorService;
+        _exercicioService = exercicio;
     }
 
     [HttpPost]
-    public IActionResult Salvar([FromBody] ProfessorRequest request)
+    public IActionResult Salvar([FromBody] ExercicioRequest request)
     {
         try
         {
             if (!request.IdAcademia.HasValue)
                 request.IdAcademia = UsuarioLogado.Id;
 
-            var result = _professorService.Salvar(request);
+            var result = _exercicioService.Salvar(request);
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
 
@@ -40,22 +38,21 @@ public class ProfessoresController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> List([FromQuery] ProfessorFilter filter)
+    public async Task<IActionResult> List([FromQuery] ExercicioFilter filter)
     {
         try
         {
-            var result = _professorService.Listar(filter);
+            var result = _exercicioService.Listar(filter);
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
 
-            var paginedQuery = await PaginatedList<Usuario>.CreateAsync(result.Dados!, filter.Pagina, filter.PorPagina);
+            var paginedQuery = await PaginatedList<Exercicio>.CreateAsync(result.Dados!, filter.Pagina, filter.PorPagina);
 
             return Sucesso(new
-            {   
-                Professores = paginedQuery.Items!.Select(q => new
+            {
+                Exercicios = paginedQuery.Items!.Select(q => new
                 {
                     q.Nome,
-                    q.Email,
                     q.Id,
                     nomeDaAcademia = q.Academia!.Nome,
                 }),
@@ -72,7 +69,7 @@ public class ProfessoresController : BaseApiController
     [HttpDelete, Route("{id:int}")]
     public IActionResult Excluir([FromRoute] int id)
     {
-        var result = _professorService.Deletar(id);
+        var result = _exercicioService.Deletar(id);
 
         if (!result.Sucesso)
             return Erro(result.Mensagem!);
@@ -83,14 +80,13 @@ public class ProfessoresController : BaseApiController
     [HttpGet, Route("{id:int}")]
     public IActionResult BuscarPorId([FromRoute] int id)
     {
-        var result = _professorService.BuscarPorId(id);
+        var result = _exercicioService.BuscarPorId(id);
 
         if (!result.Sucesso)
             return Erro(result.Mensagem!);
 
         return Sucesso(new
         {
-            result.Dados!.Email,
             result.Dados!.Nome,
             result.Dados!.Id,
         });

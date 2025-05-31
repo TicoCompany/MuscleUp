@@ -1,0 +1,40 @@
+﻿@using System.Text.Json
+@{
+    ViewBag.Title = "Exercicio";
+    var json = System.Text.Json.JsonSerializer.Serialize(ViewBag.Json);
+}
+@section Scripts {
+    <script src="~/js/exercicio/module.js"></script>
+}
+
+<div ng-controller="ExercicioController" class="container">
+
+    <h2 class="fw-bold"> @ViewBag.Title</h2>
+    <form class="row" ng-submit="salvar()">
+
+        <div class="mb-3 col-lg-6 col-lg-6">
+            <label class="form-label" for="academiaSelect">Selecione uma academia:</label>
+        </div>
+
+        <div class="mb-3 col-lg-6 col-lg-6">
+            <label for="Nome" class="form-label">Nome</label>
+            <input type="text" ng-model="exercicio.nome" required class="form-control" id="Nome">
+        </div>
+
+        <div class="mb-3 col-lg-6">
+            <label for="Email" class="form-label">E-mail</label>
+            <input type="email" ng-model="exercicio.email" required class="form-control" id="Email">
+        </div>
+
+        <div class="mb-3 col-lg-6">
+            <label for="Peso" class="form-label">Data de nascimento</label>
+            <input class="form-control" type="date" ng-model="exercicio.dataDeNascimento">
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end">
+            <a href="@Url.Action("Index", "Exercicio")" class="btn btn-secondary"> Voltar</a>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+
+    </form>
+</div>
