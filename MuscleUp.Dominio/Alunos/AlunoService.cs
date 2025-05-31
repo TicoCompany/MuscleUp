@@ -91,13 +91,11 @@ internal class AlunoService : IAlunoService
 
     public ResultService<int?> Deletar(int id)
     {
-
-        var aluno = _appDbContext.Alunos.FirstOrDefault(q => q.IdUsuario == id);
-
-        if (aluno == null)
+        var usuario = _appDbContext.Usuarios.FirstOrDefault(q => q.Id == id);
+        if (usuario == null)
             return ResultService<int?>.Falha("Aluno não encontrado");
 
-        _appDbContext.Alunos.Remove(aluno);
+        _appDbContext.Usuarios.Remove(usuario);
         _appDbContext.SaveChanges();
 
         return ResultService<int?>.Ok(null, "Aluno excluído com sucesso!");
@@ -106,11 +104,11 @@ internal class AlunoService : IAlunoService
     public ResultService<Aluno?> BuscarPorId(int id)
     {
 
-        var Aluno = _appDbContext.Alunos.Include(q => q.Usuario).AsNoTracking().FirstOrDefault(q => q.IdUsuario == id);
+        var aluno = _appDbContext.Alunos.Include(q => q.Usuario).AsNoTracking().FirstOrDefault(q => q.IdUsuario == id);
 
-        if (Aluno == null)
+        if (aluno == null)
             return ResultService<Aluno?>.Falha("Aluno não encontrado");
 
-        return ResultService<Aluno?>.Ok(Aluno, "Aluno excluído com sucesso!");
+        return ResultService<Aluno?>.Ok(aluno);
     }
 }

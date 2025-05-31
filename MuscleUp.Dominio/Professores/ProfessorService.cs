@@ -90,6 +90,6 @@ internal class ProfessorService : IProfessorService
         if (professor == null)
             return ResultService<Usuario?>.Falha("Professor não encontrado");
 
-        return ResultService<Usuario?>.Ok(professor, "Professor excluído com sucesso!");
+        return ResultService<Usuario?>.Ok(professor);
     }
 }
