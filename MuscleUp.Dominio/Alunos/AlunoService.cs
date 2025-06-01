@@ -1,15 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MuscleUp.Dominio.Componentes;
+using MuscleUp.Dominio.Contas;
 using MuscleUp.Dominio.DataBase;
+using MuscleUp.Dominio.Filters;
 using MuscleUp.Dominio.Mensageria;
 using MuscleUp.Dominio.Usuarios;
 using MuscleUp.Dominio.ViewModels.Alunos;
+using MuscleUp.Dominio.ViewModels.Contas;
 
 namespace MuscleUp.Dominio.Alunos;
 public interface IAlunoService
 {
-    Task<ResultService<int?>> Salvar(AlunoRequest request);
-    ResultService<IQueryable<Aluno>> Listar();
+    Task<ResultService<int?>> Salvar(AlunoRequest request, int idUsuarioLogado);
+    ResultService<IQueryable<Aluno>> Listar(AlunoFilter filter);
     ResultService<Aluno?> BuscarPorId(int id);
     ResultService<int?> Deletar(int id);
 }
@@ -17,18 +20,24 @@ internal class AlunoService : IAlunoService
 {
     private readonly IAppDbContext _appDbContext;
     private readonly IEnviadorDeEmail _enviadorDeEmail;
+    private readonly IContaService _contaService;
 
-    public AlunoService(IAppDbContext appDbContext, IEnviadorDeEmail enviadorDeEmail)
+    public AlunoService(IAppDbContext appDbContext, IEnviadorDeEmail enviadorDeEmail, IContaService contaService)
     {
         _appDbContext = appDbContext;
         _enviadorDeEmail = enviadorDeEmail;
+        _contaService = contaService;
     }
 
-    public async Task<ResultService<int?>> Salvar(AlunoRequest request)
-    {
+    public async Task<ResultService<int?>> Salvar(AlunoRequest request, int idUsuarioLogado)
+    {   
         var usuarioDoBanco = _appDbContext.Usuarios.AsNoTracking().FirstOrDefault(q => q.Id == request.Id);
         string? senhaNova = null;
         string? senhaEncriptografada = null;
+
+        if(_contaService.EmailJaExistente(new ValidarEmailRequest(request.Email, idUsuarioLogado, usuarioDoBanco)))
+            return ResultService<int?>.Falha("E-mail já cadastrado!");
+
         if (usuarioDoBanco == null)
         {
             senhaNova = GeradorSenha.GerarSenha();
@@ -38,6 +47,7 @@ internal class AlunoService : IAlunoService
         var usuario = new Usuario
         {
             Id = request.Id ?? 0,
+            IdAcademia = request.IdAcademia,
             Nome = request.Nome,
             Email = request.Email,
             Senha = senhaEncriptografada != null ? senhaEncriptografada : usuarioDoBanco!.Senha,
@@ -81,10 +91,16 @@ internal class AlunoService : IAlunoService
         return ResultService<int?>.Ok(null, "Aluno salvo com sucesso!");
     }
 
-    public ResultService<IQueryable<Aluno>> Listar()
+    public ResultService<IQueryable<Aluno>> Listar(AlunoFilter filter)
     {
 
-        var alunos = _appDbContext.Alunos.Include(q => q.Usuario).AsNoTracking().AsQueryable();
+        var alunos = _appDbContext.Alunos.Include(q => q.Usuario.Academia).Where(q => q.Usuario.IdAcademia != null).AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filter.Busca))
+            alunos = alunos.Where(q => q.Usuario.Nome.Contains(filter.Busca));
+
+        if (filter.IdAcademia != 0)
+            alunos = alunos.Where(q => q.Usuario.IdAcademia == filter.IdAcademia);
 
         return ResultService<IQueryable<Aluno>>.Ok(alunos);
     }

@@ -4,7 +4,7 @@
     var json = System.Text.Json.JsonSerializer.Serialize(ViewBag.Json);
 }
 @section Scripts {
-    <script src="~/js/professor/module.js"></script>z
+    <script src="~/js/professor/module.js"></script>
 }
 
 <div ng-controller="ProfessorController" ng-init='iniciar(@Html.Raw(json))' class="container">
@@ -12,13 +12,14 @@
     <h2 class="fw-bold"> @ViewBag.Title</h2>
     <form class="row" ng-submit="salvar()">
 
-        <div class="mb-3 col-lg-6 col-lg-6">
+        <div ng-show="idAcademia === 0" class="mb-3 col-lg-6 col-lg-6">
             <label class="form-label" for="academiaSelect">Selecione uma academia:</label>
 
             <select id="academiaSelect"
                     class="form-select"
                     ng-model="professor.IdAcademia"
-                    ng-options="academia.Id as academia.Nome for academia in academias">
+                    ng-options="academia.Id as academia.Nome for academia in academias"
+                    required>
             </select>
         </div>
 

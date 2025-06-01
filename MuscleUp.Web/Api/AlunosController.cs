@@ -23,7 +23,10 @@ public class AlunosController : BaseApiController
     {
         try
         {
-            var result = await _alunoService.Salvar(request);
+            if (!request.IdAcademia.HasValue)
+                request.IdAcademia = UsuarioLogado.IdAcademia;
+
+            var result = await _alunoService.Salvar(request, UsuarioLogado.Id);
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
 
@@ -37,11 +40,14 @@ public class AlunosController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> List([FromQuery] PaginationFilter filter)
+    public async Task<IActionResult> List([FromQuery] AlunoFilter filter)
     {
         try
         {
-            var result = _alunoService.Listar();
+            if (!filter.IdAcademia.HasValue)
+                filter.IdAcademia = UsuarioLogado.IdAcademia;
+
+            var result = _alunoService.Listar(filter);
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
 
@@ -51,6 +57,7 @@ public class AlunosController : BaseApiController
             {
                 alunos = paginedQuery.Items!.Select(q => new
                 {
+                    NomeDaAcademia = q.Usuario.Academia?.Nome,
                     q.Usuario.Nome,
                     q.Usuario.Email,
                     Id = q.IdUsuario,

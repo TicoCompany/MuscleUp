@@ -1,9 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MuscleUp.Dominio.DataBase;
 
 namespace MuscleUp.Web.Controllers;
 
 public class AlunoController : BaseController
 {
-    public IActionResult Index() => View();
-    public IActionResult Create(int? id) => View(id);
+    private readonly IAppDbContext _context;
+
+    public AlunoController(IAppDbContext context) => _context = context;
+
+    public IActionResult Index()
+    {
+        ViewBag.Json = new
+        {
+            Academias = _context.Academias.AsNoTracking().OrderBy(q => q.Nome).Select(q => new
+            {
+                q.Id,
+                q.Nome
+            }),
+            IdAcademia = UsuarioLogado.IdAcademia
+        };
+        return View();
+    }
+
+    public IActionResult Create(int? id)
+    {
+        ViewBag.Usuario = UsuarioLogado;
+        ViewBag.Json = new
+        {
+            Academias = _context.Academias.AsNoTracking().OrderBy(q => q.Nome).Select(q => new { q.Id, q.Nome }),
+            Id = id
+        };
+
+        return View();
+    }
 }

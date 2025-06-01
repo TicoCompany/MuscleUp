@@ -1,7 +1,6 @@
 ﻿@{
 	ViewBag.Title = "Professores";
 	var json = System.Text.Json.JsonSerializer.Serialize(ViewBag.Json);
-
 }
 @section Scripts {
 	<script src="~/js/Professor/module.js"></script>
@@ -13,25 +12,30 @@
 		<div class="col-md-6">
 			<span class="form-label">&nbsp;</span>
 			<div class="input-group">
-				<span class="input-group-text">
+				<button ng-click="listar()" type="button" class="input-group-text">
 					<i class="fa fa-search"></i>
-				</span>
+				</button>
 				<input type="text" class="form-control" placeholder="Buscar..." ng-model="filtros.busca">
 			</div>
 		</div>
 
-		<div class="col-md-6">
+		<div class="col-md-6" ng-show="idAcademia === 0" >
 			<span class="form-label">Academia </span>
 			<select id="academiaSelect"
 					class="form-select"
-					ng-model="filtros.IdAcademia"
-					ng-change="listar()"
-					ng-options="academia.Id as academia.Nome for academia in academias">
+					ng-model="filtros.idAcademia"
+					ng-change="listar()">
+				<option value="0">Todas</option>
+				<option ng-repeat="academia in academias"
+						ng-value="academia.Id">
+					{{ academia.Nome }}
+				</option>
 			</select>
 		</div>
 	</div>
-
-	<div class="text-end mb-3">
+	
+	<div class="d-flex justify-content-between my-3">
+		<button type="button" ng-click="listar()" class="btn btn-primary">Buscar</button>
 		<a href="@Url.Action("Create", "Professor")" class="btn btn-success">+ Adicionar</a>
 	</div>
 
@@ -42,7 +46,7 @@
 					<th>#</th>
 					<th>Nome</th>
 					<th>Email</th>
-					<th>Academia</th>
+					<th ng-show="idAcademia === 0">Academia</th>
 					<th> </th>
 				</tr>
 			</thead>
@@ -51,7 +55,7 @@
 					<td class="align-content-center">{{ item.id}}</td>
 					<td class="align-content-center">{{ item.nome }}</td>
 					<td class="align-content-center">{{ item.email }}</td>
-					<td class="align-content-center">{{ item.nomeDaAcademia  }}</td>
+					<td ng-show="idAcademia === 0" class="align-content-center">{{ item.nomeDaAcademia  }}</td>
 					<td class="text-end">
 						<a class="btn btn-sm btn-primary me-1" ng-href="/Professor/Create/{{item.id}}">
 							<i class="fa fa-edit"></i>

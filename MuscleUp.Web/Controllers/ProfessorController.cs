@@ -21,6 +21,7 @@ public class ProfessorController : BaseController
                 q.Id,
                 q.Nome
             }),
+            IdAcademia = UsuarioLogado.IdAcademia
         };
 
         return View();
@@ -37,7 +38,8 @@ public class ProfessorController : BaseController
                 q.Id,
                 q.Nome
             }),
-            Id = id
+            Id = id,
+            IdAcademia = UsuarioLogado.IdAcademia
         };
 
         return View();

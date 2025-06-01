@@ -3,12 +3,12 @@ using MuscleUp.Dominio.Componentes;
 using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.Usuarios;
 using MuscleUp.Dominio.ViewModels.Contas;
-using MuscleUp.Dominio.ViewModels.Usuarios;
 
 namespace MuscleUp.Dominio.Contas;
 public interface IContaService
 {
     ResultService<Usuario> Login(LoginRequest request);
+    bool EmailJaExistente(ValidarEmailRequest request);
 }
 
 internal class ContaService : IContaService
@@ -22,7 +22,7 @@ internal class ContaService : IContaService
 
     public ResultService<Usuario> Login(LoginRequest request)
     {
-        var usuario = _appDbContext.Usuarios.AsNoTracking().FirstOrDefault(u => u.Email == request.Email);
+        var usuario = _appDbContext.Usuarios.AsNoTracking().FirstOrDefault(u => u.Email.ToLower() == request.Email.ToLower());
 
         if (usuario == null)
             return ResultService<Usuario>.Falha("E-mail não cadastrado");
@@ -34,6 +34,18 @@ internal class ContaService : IContaService
 
 
         return ResultService<Usuario>.Ok(usuario, "Login realizado com sucesso!");
+
+    }
+
+    public bool EmailJaExistente(ValidarEmailRequest request)
+    {
+        if (request.Usuario != null && request.Usuario.Email == request.Email)
+            return false;
+
+        if (_appDbContext.Usuarios.Any(q => q.Email.ToLower() == request.Email.ToLower()))
+            return true;
+
+        return false;
 
     }
 }
