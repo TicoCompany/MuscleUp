@@ -66,7 +66,7 @@ internal class ProfessorService : IProfessorService
         var professores = _appDbContext.Usuarios.Include(q => q.Academia).AsNoTracking().Where(q => q.IdAcademia != null && q.Aluno == null).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filter.Busca))
-            professores = professores.Where(q => q.Nome.Contains(filter.Busca));
+            professores = professores.Where(q => q.Nome.Contains(filter.Busca) || q.Email.Contains(filter.Busca));
 
         if (filter.IdAcademia != 0)
             professores = professores.Where(q => q.IdAcademia == filter.IdAcademia);

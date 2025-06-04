@@ -97,7 +97,7 @@ internal class AlunoService : IAlunoService
         var alunos = _appDbContext.Alunos.Include(q => q.Usuario.Academia).Where(q => q.Usuario.IdAcademia != null).AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filter.Busca))
-            alunos = alunos.Where(q => q.Usuario.Nome.Contains(filter.Busca));
+            alunos = alunos.Where(q => q.Usuario.Nome.Contains(filter.Busca) || q.Usuario.Email.Contains(filter.Busca));
 
         if (filter.IdAcademia != 0)
             alunos = alunos.Where(q => q.Usuario.IdAcademia == filter.IdAcademia);
