@@ -69,7 +69,7 @@
                             $scope.aluno = response.data.data;
                         }
                     }, function (error) {
-                        $mensagem.error("Erro ao excluír o aluno");
+                        $mensagem.error("Erro ao buscar o aluno");
                     }).finally(function () {
                         $rootScope.carregando = false;
                     });

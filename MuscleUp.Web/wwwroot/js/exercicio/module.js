@@ -79,7 +79,6 @@
                 $scope.exercicio = {
                     idAcademia: json.IdAcademia,
                     id: 0,
-                    dificuldade: 1,
                 }
             }
             $scope.idAcademia = json.IdAcademia;

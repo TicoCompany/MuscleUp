@@ -46,7 +46,8 @@
 					<th>Nome</th>
 					<th>Grupo muscular</th>
 					<th>Dificuldade</th>
-					<th ng-show="idAcademia == 0"> Academia </th>
+					<th ng-if="idAcademia == 0"> Academia </th>
+					<th> </th>
 				</tr>
 			</thead>
 			<tbody>
@@ -54,7 +55,7 @@
 					<td>{{ item.nome }}</td>
 					<td>{{ item.grupoMuscular }}</td>
 					<td>{{ item.dificuldade }}</td>
-					<td ng-show="idAcademia == 0">{{ item.nomeDaAcademia  }}</td>
+					<td ng-if="idAcademia == 0">{{ item.nomeDaAcademia  }}</td>
 					<td class="text-end">
 						<a class="btn btn-sm btn-primary me-1" ng-href="/Exercicio/Create/{{item.id}}">
 							<i class="fa fa-edit"></i>

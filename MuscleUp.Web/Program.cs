@@ -10,6 +10,7 @@ builder.AddDataBaseConfiguration();
 builder.AddSessionConfig();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDominioServices();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.Configure<CloudinarySettings>(
     builder.Configuration.GetSection("CloudinarySettings"));
