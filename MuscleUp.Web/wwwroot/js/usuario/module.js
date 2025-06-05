@@ -48,8 +48,6 @@
                             });
                     }
                 });
-
-
         };
 
     });
@@ -70,8 +68,6 @@
                         $rootScope.carregando = false;
                     });
             }
-
-
         };
 
         $scope.salvar = function () {

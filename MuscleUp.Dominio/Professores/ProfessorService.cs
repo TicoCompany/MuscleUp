@@ -1,16 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MuscleUp.Dominio.Componentes;
+using MuscleUp.Dominio.Contas;
 using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.Filters;
 using MuscleUp.Dominio.Mensageria;
 using MuscleUp.Dominio.Usuarios;
+using MuscleUp.Dominio.ViewModels.Contas;
 using MuscleUp.Dominio.ViewModels.Professores;
 
 namespace MuscleUp.Dominio.Professores;
 
 public interface IProfessorService
 {
-    ResultService<int?> Salvar(ProfessorRequest request);
+    ResultService<int?> Salvar(ProfessorRequest request, int idUsuarioLogado);
     ResultService<IQueryable<Usuario>> Listar(ProfessorFilter filter);
     ResultService<Usuario?> BuscarPorId(int id);
     ResultService<int?> Deletar(int id);
@@ -19,16 +21,21 @@ internal class ProfessorService : IProfessorService
 {
     private readonly IAppDbContext _appDbContext;
     private readonly IEnviadorDeEmail _enviadorDeEmail;
+    private readonly IContaService _contaService;
 
-    public ProfessorService(IAppDbContext appDbContext, IEnviadorDeEmail enviadorDeEmail)
+    public ProfessorService(IAppDbContext appDbContext, IEnviadorDeEmail enviadorDeEmail, IContaService contaService)
     {
         _appDbContext = appDbContext;
         _enviadorDeEmail = enviadorDeEmail;
+        _contaService = contaService;
     }
 
-    public ResultService<int?> Salvar(ProfessorRequest request)
+    public ResultService<int?> Salvar(ProfessorRequest request, int idUsuarioLogado)
     {
         var usuarioDoBanco = _appDbContext.Usuarios.AsNoTracking().FirstOrDefault(q => q.Id == request.Id);
+
+        if (_contaService.EmailJaExistente(new ValidarEmailRequest(request.Email, idUsuarioLogado, usuarioDoBanco)))
+            return ResultService<int?>.Falha("E-mail já cadastrado!");
 
         string hash = "";
         if (request.Senha != null)
@@ -56,12 +63,12 @@ internal class ProfessorService : IProfessorService
 
     public ResultService<IQueryable<Usuario>> Listar(ProfessorFilter filter)
     {
-        var professores = _appDbContext.Usuarios.Include(q => q.Academia).AsNoTracking().Where(q => q.IdAcademia != null).AsQueryable();
+        var professores = _appDbContext.Usuarios.Include(q => q.Academia).AsNoTracking().Where(q => q.IdAcademia != null && q.Aluno == null).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(filter.Busca))
-            professores = professores.Where(q => q.Nome.Contains(filter.Busca));
+            professores = professores.Where(q => q.Nome.Contains(filter.Busca) || q.Email.Contains(filter.Busca));
 
-        if (filter.IdAcademia.HasValue)
+        if (filter.IdAcademia != 0)
             professores = professores.Where(q => q.IdAcademia == filter.IdAcademia);
 
 

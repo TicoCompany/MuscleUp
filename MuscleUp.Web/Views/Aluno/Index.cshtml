@@ -1,24 +1,43 @@
 ﻿@{
 	ViewBag.Title = "Alunos";
+	var json = System.Text.Json.JsonSerializer.Serialize(ViewBag.Json);
+
 }
 @section Scripts {
 	<script src="~/js/aluno/module.js"></script>
 }
-<div class="container mt-4" ng-controller="AlunoListController" ng-init="iniciar()">
+<div class="container mt-4" ng-controller="AlunoListController" ng-init='iniciar(@Html.Raw(json))'>
 	<h2 class=fw-bold>@ViewBag.Title</h2>
 
 	<div class="row mb-3">
 		<div class="col-md-6">
+			<span class="form-label">&nbsp;</span>
 			<div class="input-group">
-				<span class="input-group-text">
+				<button type="button" ng-click="listar()" class="input-group-text">
 					<i class="fa fa-search"></i>
-				</span>
+				</button>
 				<input type="text" class="form-control" placeholder="Buscar..." ng-model="filtros.busca">
 			</div>
 		</div>
+
+		<div class="col-md-6" ng-show="idAcademia === 0">
+			<span class="form-label">Academia </span>
+			<select id="academiaSelect"
+					class="form-select"
+					ng-model="filtros.idAcademia"
+					ng-change="listar()">
+				<option value="0">Todas</option>
+				<option ng-repeat="academia in academias"
+						ng-value="academia.Id">
+					{{ academia.Nome }}
+				</option>
+			</select>
+
+		</div>
 	</div>
 
-	<div class="text-end mb-3">
+	<div class="d-flex justify-content-between my-3">
+		<button type="button" ng-click="listar()" class="btn btn-primary">Buscar</button>
 		<a href="@Url.Action("Create", "Aluno")" class="btn btn-success">+ Adicionar</a>
 	</div>
 
@@ -29,6 +48,7 @@
 					<th>#</th>
 					<th>Nome</th>
 					<th>Email</th>
+					<th ng-show="idAcademia === 0">Academia</th>
 					<th> </th>
 				</tr>
 			</thead>
@@ -37,6 +57,7 @@
 					<td>{{ item.id}}</td>
 					<td>{{ item.nome }}</td>
 					<td>{{ item.email }}</td>
+					<td ng-show="idAcademia === 0">{{ item.nomeDaAcademia }}</td>
 					<td class="text-end">
 						<a class="btn btn-sm btn-primary me-1" ng-href="/Aluno/Create/{{item.id}}">
 							<i class="fa fa-edit"></i>

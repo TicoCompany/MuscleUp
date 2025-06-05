@@ -25,7 +25,7 @@ public class UsuariosController : BaseApiController
     {
         try
         {
-            var result = _usuarioService.Salvar(request);
+            var result = _usuarioService.Salvar(request, UsuarioLogado.Id);
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
 

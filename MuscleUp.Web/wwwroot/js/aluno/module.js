@@ -2,18 +2,22 @@
     const app = angular.module("app");
 
     app.controller("AlunoListController", function ($scope, $http, $mensagem, $rootScope) {
-        $scope.iniciar = function () {
+        $scope.iniciar = function (json) {
             $scope.filtros = {
                 pagina: 1,
-                porPagina: 10
+                porPagina: 10,
+                idAcademia: json.IdAcademia,
+                busca: ""
             };
+            $scope.idAcademia = json.IdAcademia;
             $scope.listar();
+            $scope.academias = json.Academias;
         };
 
         $scope.listar = function () {
             $rootScope.carregando = true;
 
-            $http.get('/api/Alunos?pagina=' + $scope.filtros.pagina + '&porPagina=' + $scope.filtros.porPagina)
+            $http.get('/api/Alunos?Pagina=' + $scope.filtros.pagina + '&PorPagina=' + $scope.filtros.porPagina + '&IdAcademia=' + $scope.filtros.idAcademia + '&Busca=' + $scope.filtros.busca)
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
@@ -55,9 +59,9 @@
     });
 
     app.controller("AlunoController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
-        $scope.iniciar = function (id) {
-            if (id) {
-                $http.get(`/api/Alunos/${id}`)
+        $scope.iniciar = function (json) {
+            if (json.Id) {
+                $http.get(`/api/Alunos/${json.Id}`)
                     .then(function (response) {
                         if (!response.data.sucesso)
                             $mensagem.error(`${response.data.mensagem}`);
@@ -69,9 +73,10 @@
                     }).finally(function () {
                         $rootScope.carregando = false;
                     });
+
             }
-
-
+            console.log(json)
+            $scope.academias = json.Academias;
         };
 
         $scope.salvar = function () {

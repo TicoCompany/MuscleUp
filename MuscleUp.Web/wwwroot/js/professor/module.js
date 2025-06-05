@@ -5,17 +5,19 @@
         $scope.iniciar = function (json) {
             $scope.filtros = {
                 pagina: 1,
-                porPagina: 10
+                porPagina: 10,
+                idAcademia: json.IdAcademia,
+                busca: ""
             };
+            $scope.idAcademia = json.IdAcademia;
             $scope.listar();
-
             $scope.academias = json.Academias;
         };
 
         $scope.listar = function () {
             $rootScope.carregando = true;
 
-            $http.get('/api/Professores?pagina=' + $scope.filtros.pagina + '&porPagina=' + $scope.filtros.porPagina)
+            $http.get('/api/Professores?pagina=' + $scope.filtros.pagina + '&PorPagina=' + $scope.filtros.porPagina + '&IdAcademia=' + $scope.filtros.idAcademia + '&Busca=' + $scope.filtros.busca)
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
@@ -56,7 +58,6 @@
 
     app.controller("ProfessorController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
         $scope.iniciar = function (json) {
-            console.log(json);
             if (json.Id) {
                 $http.get(`/api/Professores/${json.Id}`)
                     .then(function (response) {
@@ -71,7 +72,7 @@
                         $rootScope.carregando = false;
                     });
             }
-
+            $scope.idAcademia = json.IdAcademia;
             $scope.academias = json.Academias;
         };
 

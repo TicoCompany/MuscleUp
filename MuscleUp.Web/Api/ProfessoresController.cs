@@ -25,7 +25,7 @@ public class ProfessoresController : BaseApiController
             if (!request.IdAcademia.HasValue)
                 request.IdAcademia = UsuarioLogado.IdAcademia;
 
-            var result = _professorService.Salvar(request);
+            var result = _professorService.Salvar(request, UsuarioLogado.Id);
             if (!result.Sucesso)
                 return Erro(result.Mensagem!);
 
