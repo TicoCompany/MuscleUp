@@ -1,7 +1,7 @@
 ﻿(function () {
     const app = angular.module("app");
 
-    app.controller("UsuarioListController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
+    app.controller("TreinoListController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
         $scope.iniciar = function () {
             $scope.filtros = {
                 pagina: 1,
@@ -13,27 +13,27 @@
         $scope.listar = function () {
             $rootScope.carregando = true;
 
-            $http.get('/api/Usuarios?pagina=' + $scope.filtros.pagina + '&porPagina=' + $scope.filtros.porPagina)
+            $http.get('/api/Treinos?pagina=' + $scope.filtros.pagina + '&porPagina=' + $scope.filtros.porPagina)
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
                     else {
-                        $scope.usuarios = response.data.data.usuarios;
+                        $scope.treinos = response.data.data.treinos;
                         $scope.filtros.totalPaginas = response.data.data.totalPaginas;
                     }
                 }, function (error) {
-                    $mensagem.error("Erro ao listar usuários");
+                    $mensagem.error("Erro ao listar treinos");
                 }).finally(function () {
                     $rootScope.carregando = false;
                 });
         };
 
         $scope.excluir = function (id) {
-            $mensagem.confirm("Deseja realmente excluir este usuário?")
+            $mensagem.confirm("Deseja realmente excluir este treino?")
                 .then(function (resposta) {
                     if (resposta) {
                         $rootScope.carregando = true;
-                        $http.delete(`/api/Usuarios/${id}`)
+                        $http.delete(`/api/Treinos/${id}`)
                             .then(function (response) {
                                 if (!response.data.sucesso)
                                     $mensagem.error(`${response.data.mensagem}`);
@@ -42,7 +42,7 @@
                                     $scope.listar();
                                 }
                             }, function (error) {
-                                $mensagem.error("Erro ao excluír o usuário");
+                                $mensagem.error("Erro ao excluír o treino");
                             }).finally(function () {
                                 $rootScope.carregando = false;
                             });
@@ -52,37 +52,62 @@
 
     });
 
-    app.controller("UsuarioController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
-        $scope.iniciar = function (id) {
-            if (id) {
-                $http.get(`/api/Usuarios/${id}`)
+    app.controller("TreinoController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
+        $scope.iniciar = function (json) {
+            if (json.Id) {
+                $http.get(`/api/Treinos/${json.Id}`)
                     .then(function (response) {
                         if (!response.data.sucesso)
                             $mensagem.error(`${response.data.mensagem}`);
                         else {
-                            $scope.usuario = response.data.data;
+                            $scope.treino = response.data.data;
                         }
                     }, function (error) {
-                        $mensagem.error("Erro ao buscar o usuário");
+                        $mensagem.error("Erro ao buscar o treino");
                     }).finally(function () {
                         $rootScope.carregando = false;
                     });
+            } else {
+                $scope.treino = {
+                    idAcademia: json.IdAcademia,
+                }
+            }
+            $scope.divisoes = json.Divisoes;
+            $scope.etapaAtual = 2;
+        };
+
+        $scope.etapaAtual = 1;
+
+        $scope.treino = {
+            nome: '',
+            divisao: null,
+            publico: null,
+            tempo: ''
+        };
+
+        $scope.irParaEtapa = function (etapa) {
+            $scope.etapaAtual = etapa;
+        };
+
+        $scope.proximaEtapa = function () {
+            if ($scope.treino.nome && $scope.treino.divisao && $scope.treino.tempo !== '') {
+                $scope.etapaAtual = 2;
             }
         };
 
         $scope.salvar = function () {
             $rootScope.carregando = true;
 
-            $http.post('/api/Usuarios', $scope.usuario)
+            $http.post('/api/treinos', $scope.treino)
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
                     else {
                         $mensagem.success(response.data.mensagem);
-                        location.href = "/Usuario/Index"
+                        location.href = "/treino/Index"
                     }
                 }, function (error) {
-                    $mensagem.error("Erro ao salvar o usuário");
+                    $mensagem.error("Erro ao salvar o treino");
                 }).finally(function () {
                     $rootScope.carregando = false;
                 });

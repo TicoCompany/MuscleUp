@@ -15,4 +15,6 @@ public class Exercicio
     public DificuldadeDoExercicio Dificuldade { get; set; }
 
     public virtual Academia Academia { get; set; }
+    public virtual ICollection<ExercicioDoTreino> ExerciciosDosTreinosVinculados { get; set; } = new HashSet<ExercicioDoTreino>();
+
 }

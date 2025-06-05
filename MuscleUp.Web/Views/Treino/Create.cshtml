@@ -1,0 +1,19 @@
+﻿@{
+	var json = System.Text.Json.JsonSerializer.Serialize(ViewBag.Json);
+	int? id = ViewBag.Id;
+	ViewBag.Title = id == null ? "Criação de treino" : "Edição de treino";
+}
+@section Scripts {
+	<script src="~/js/treino/module.js"></script>
+	<script src="~/js/treino/directive.js"></script>
+}
+
+<div ng-controller="TreinoController" ng-init='iniciar(@Html.Raw(json))' class="container">
+	<h2 class="fw-bold"> @ViewBag.Title</h2>
+
+
+	<step1 ng-show="etapaAtual === 1" treino="trenino" etapa-atual="etapaAtual" divisoes="divisoes"> </step1>
+	<step2 ng-show="etapaAtual === 2" treino="trenino" etapa-atual="etapaAtual"> </step2>
+	<step3 ng-show="etapaAtual === 3" treino="trenino" etapa-atual="etapaAtual"> </step3>
+
+</div>
