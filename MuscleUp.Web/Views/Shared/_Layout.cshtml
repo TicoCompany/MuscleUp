@@ -1,4 +1,8 @@
 ﻿@using MuscleUp.Dominio.Auth
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+	UsuarioSessaoModel usuario = HttpContextAccessor.HttpContext!.ObterUsuarioLogado()!;
+}
 <!DOCTYPE html>
 <html lang="pt-br" ng-app="app">
 <head>
@@ -26,9 +30,13 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuário</a>
-						</li>
+						@if (usuario.IdAcademia == 0)
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuário</a>
+							</li>
+						}
+
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Aluno" asp-action="Index">Aluno</a>
 						</li>
@@ -38,13 +46,15 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Professor" asp-action="Index">Professor</a>
 						</li>
-
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Exercicio" asp-action="Index">Exercício</a>
+						</li>
 					</ul>
 
 					<div class="dropdown me-3">
 						<a class="dropdown-toggle text-decoration-none text-dark" href="javascript:;"
-								id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-							@User.Identity?.Name
+						   id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+							@usuario.Nome
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
 							<li><a class="dropdown-item" asp-controller="Conta" asp-action="Perfil">Ver Perfil</a></li>

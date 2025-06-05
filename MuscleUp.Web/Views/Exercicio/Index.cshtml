@@ -1,14 +1,16 @@
 ﻿@{
-	ViewBag.Title = "Exercicios";
+	ViewBag.Title = "Exercícios";
+	var json = System.Text.Json.JsonSerializer.Serialize(ViewBag.Json);
 }
 @section Scripts {
 	<script src="~/js/exercicio/module.js"></script>
 }
-<div class="container mt-4" ng-controller="ExercicioListController" ng-init="iniciar()">
+<div class="container mt-4" ng-controller="ExercicioListController" ng-init='iniciar(@Html.Raw(json))'>
 	<h2 class=fw-bold>@ViewBag.Title</h2>
 
 	<div class="row mb-3">
-		<div class="col-md-6">
+		<div class="col-md-4">
+			<label class="form-label">&nbsp;</label>
 			<div class="input-group">
 				<span class="input-group-text">
 					<i class="fa fa-search"></i>
@@ -16,9 +18,24 @@
 				<input type="text" class="form-control" placeholder="Buscar..." ng-model="filtros.busca">
 			</div>
 		</div>
+
+		<div class="mb-3 col-md-4 ">
+			<label class="form-label">Dificuldade</label>
+			<select class="form-select" ng-model="filtros.dificuldade" required ng-options="g.Id as g.Nome for g in dificuldades">
+				<option value="">Todas</option>
+			</select>
+		</div>
+
+		<div class="mb-3 col-md-4">
+			<label class="form-label">Grupo muscular</label>
+			<select class="form-select" ng-model="filtros.grupoMuscular" required ng-options="g.Id as g.Nome for g in gruposMusculares">
+				<option value="">Todos</option>
+			</select>
+		</div>
 	</div>
 
-	<div class="text-end mb-3">
+	<div class="d-flex justify-content-between mb-3">
+		<button type="button" ng-click="listar()" class="btn btn-primary ">Buscar</button>
 		<a href="@Url.Action("Create", "Exercicio")" class="btn btn-success">+ Adicionar</a>
 	</div>
 
@@ -26,17 +43,19 @@
 		<table class="table table-hover table-sm ">
 			<thead class="">
 				<tr>
-					<th>#</th>
 					<th>Nome</th>
-					<th>Email</th>
+					<th>Grupo muscular</th>
+					<th>Dificuldade</th>
+					<th ng-if="idAcademia == 0"> Academia </th>
 					<th> </th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="item in c">
-					<td>{{ item.id}}</td>
+				<tr ng-repeat="item in exercicios">
 					<td>{{ item.nome }}</td>
-					<td>{{ item.email }}</td>
+					<td>{{ item.grupoMuscular }}</td>
+					<td>{{ item.dificuldade }}</td>
+					<td ng-if="idAcademia == 0">{{ item.nomeDaAcademia  }}</td>
 					<td class="text-end">
 						<a class="btn btn-sm btn-primary me-1" ng-href="/Exercicio/Create/{{item.id}}">
 							<i class="fa fa-edit"></i>

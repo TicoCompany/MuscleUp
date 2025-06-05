@@ -112,6 +112,9 @@ namespace MuscleUp.DataBase.Migrations
                     b.Property<int>("Dificuldade")
                         .HasColumnType("int");
 
+                    b.Property<int>("GrupoMuscular")
+                        .HasColumnType("int");
+
                     b.Property<int?>("IdAcademia")
                         .HasColumnType("int");
 
@@ -120,11 +123,15 @@ namespace MuscleUp.DataBase.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("varchar(64)");
 
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IdAcademia");
 
-                    b.ToTable("Exercicio");
+                    b.ToTable("Exercicios");
                 });
 
             modelBuilder.Entity("MuscleUp.Dominio.Usuarios.Usuario", b =>
