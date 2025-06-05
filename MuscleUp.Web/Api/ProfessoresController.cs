@@ -23,7 +23,7 @@ public class ProfessoresController : BaseApiController
         try
         {
             if (!request.IdAcademia.HasValue)
-                request.IdAcademia = UsuarioLogado.Id;
+                request.IdAcademia = UsuarioLogado.IdAcademia;
 
             var result = _professorService.Salvar(request);
             if (!result.Sucesso)

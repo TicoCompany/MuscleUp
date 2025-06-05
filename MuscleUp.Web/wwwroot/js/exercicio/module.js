@@ -2,18 +2,27 @@
     const app = angular.module("app");
 
     app.controller("ExercicioListController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
-        $scope.iniciar = function () {
+        $scope.iniciar = function (json) {
             $scope.filtros = {
                 pagina: 1,
                 porPagina: 10
             };
             $scope.listar();
+            $scope.academias = json.Academias;
+            $scope.idAcademia = json.IdAcademia;
+            $scope.gruposMusculares = json.GruposMusculares;
+            $scope.dificuldades = json.Dificuldades;
         };
 
         $scope.listar = function () {
             $rootScope.carregando = true;
-
-            $http.get('/api/Exercicios?pagina=' + $scope.filtros.pagina + '&porPagina=' + $scope.filtros.porPagina)
+            let url = '/api/Exercicios' +
+                '?Pagina=' + ($scope.filtros.pagina) +
+                '&PorPagina=' + ($scope.filtros.porPagina) +
+                '&Busca=' + ($scope.filtros.busca || '') +
+                '&GrupoMuscular=' + ($scope.filtros.grupoMuscular || '') +
+                '&Dificuldade=' + ($scope.filtros.dificuldade || '');
+            $http.get(url)
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
@@ -49,13 +58,12 @@
                     }
                 });
         };
-
     });
 
     app.controller("ExercicioController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
-        $scope.iniciar = function (id) {
-            if (id) {
-                $http.get(`/api/Exercicios/${id}`)
+        $scope.iniciar = function (json) {
+            if (json.Id) {
+                $http.get(`/api/Exercicios/${json.Id}`)
                     .then(function (response) {
                         if (!response.data.sucesso)
                             $mensagem.error(`${response.data.mensagem}`);
@@ -67,13 +75,39 @@
                     }).finally(function () {
                         $rootScope.carregando = false;
                     });
+            } else {
+                $scope.exercicio = {
+                    idAcademia: json.IdAcademia,
+                    id: 0,
+                    dificuldade: 1,
+                }
             }
+            $scope.idAcademia = json.IdAcademia;
+            $scope.gruposMusculares = json.GruposMusculares;
+            $scope.dificuldades = json.Dificuldades;
+            console.log(json);
         };
 
         $scope.salvar = function () {
-            $rootScope.carregando = true;
+            if ($scope.exercicio.id == 0 && !$scope.exercicio.arquivo)
+                return $mensagem.error("Coloque uma imagem para salvar o exercício")
 
-            $http.post('/api/Exercicios', $scope.exercicio)
+            $rootScope.carregando = true;
+            console.log($scope.exercicio);
+            var formData = new FormData();
+            formData.append('Id', $scope.exercicio.id);
+            formData.append('IdAcademia', $scope.exercicio.idAcademia ?? 0);
+            formData.append('Nome', $scope.exercicio.nome);
+            formData.append('Descricao', $scope.exercicio.descricao);
+            formData.append('Dificuldade', $scope.exercicio.dificuldade);
+            formData.append('GrupoMuscular', $scope.exercicio.grupoMuscular);
+            formData.append('arquivo', $scope.exercicio.arquivo);
+            formData.append('PublicId', $scope.exercicio.publicId ?? "");
+
+            $http.post('/api/Exercicios', formData, {
+                transformRequest: angular.identity,
+                headers: { 'Content-Type': undefined }
+            })
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);

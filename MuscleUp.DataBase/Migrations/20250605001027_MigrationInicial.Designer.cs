@@ -12,7 +12,7 @@ using MuscleUp.DataBase;
 namespace MuscleUp.DataBase.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250525210937_MigrationInicial")]
+    [Migration("20250605001027_MigrationInicial")]
     partial class MigrationInicial
     {
         /// <inheritdoc />
@@ -95,6 +95,45 @@ namespace MuscleUp.DataBase.Migrations
                     b.ToTable("Alunos");
                 });
 
+            modelBuilder.Entity("MuscleUp.Dominio.Exercicios.Exercicio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Caminho")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+                    b.Property<int>("Dificuldade")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdAcademia")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdAcademia");
+
+                    b.ToTable("Exercicios");
+                });
+
             modelBuilder.Entity("MuscleUp.Dominio.Usuarios.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -140,6 +179,16 @@ namespace MuscleUp.DataBase.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("MuscleUp.Dominio.Exercicios.Exercicio", b =>
+                {
+                    b.HasOne("MuscleUp.Dominio.Academias.Academia", "Academia")
+                        .WithMany("Exercicios")
+                        .HasForeignKey("IdAcademia")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Academia");
+                });
+
             modelBuilder.Entity("MuscleUp.Dominio.Usuarios.Usuario", b =>
                 {
                     b.HasOne("MuscleUp.Dominio.Academias.Academia", "Academia")
@@ -152,6 +201,8 @@ namespace MuscleUp.DataBase.Migrations
 
             modelBuilder.Entity("MuscleUp.Dominio.Academias.Academia", b =>
                 {
+                    b.Navigation("Exercicios");
+
                     b.Navigation("Usuarios");
                 });
 
