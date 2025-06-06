@@ -30,7 +30,7 @@
                 scope.treino = {
                     divisao: 3, // ABC
                     divisoes: [
-                        { nome: 'A', membros: ["teste"] },
+                        { nome: 'A', membros: [] },
                         { nome: 'B', membros: [] },
                         { nome: 'C', membros: [] }
                     ]
