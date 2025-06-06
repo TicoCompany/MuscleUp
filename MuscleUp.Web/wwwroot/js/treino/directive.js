@@ -12,7 +12,20 @@
 
             link: function (scope) {
                 scope.proximaEtapa = function () {
-                    scope.etapaAtual ++;
+                    $http.post('/api/Treinos/Step1', $scope.treino)
+                        .then(function (response) {
+                            if (!response.data.sucesso)
+                                $mensagem.error(`${response.data.mensagem}`);
+                            else {
+                                $mensagem.success(response.data.mensagem);
+                                location.href = "/treino/Index"
+                            }
+                        }, function (error) {
+                            $mensagem.error("Erro ao salvar o treino");
+                        }).finally(function () {
+                            $rootScope.carregando = false;
+                        });
+                    scope.etapaAtual++;
                 }
             },
             templateUrl: "/templates/treinos/step1.html"
@@ -23,7 +36,8 @@
         return {
             restrict: "E",
             scope: {
-                treino: "="
+                treino: "=",
+                gruposMusculares: "="
             },
 
             link: function (scope) {

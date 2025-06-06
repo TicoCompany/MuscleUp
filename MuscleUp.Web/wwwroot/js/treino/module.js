@@ -73,7 +73,8 @@
                 }
             }
             $scope.divisoes = json.Divisoes;
-            $scope.etapaAtual = 2;
+            $scope.gruposMusculares = json.GruposMusculares;
+            $scope.etapaAtual = 1;
         };
 
         $scope.etapaAtual = 1;

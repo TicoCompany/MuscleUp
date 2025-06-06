@@ -17,10 +17,10 @@
                     <div class="row">
                         <div class="col-4 mt-2" ng-repeat="membro in dia.membros">
                             <div class="badge bg-dark me-2">
-                                <span class="align-text-top">
+                                <span class="">
                                     {{ membro.nome }}
                                 </span>
-                                <button type="button" class="btn-close btn-close-white btn-sm ms-1" ng-click="removerMembro(dia, membro)"></button>
+                                <a href="javascript:;" type="button" class="text-white ms-1" ng-click="removerMembro(dia, membro)"> <i class="fa fa-close"></i></a>
                             </div>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                         <select class="form-select" ng-model="novoMembroSelecionado[dia.nome]"
                                 ng-options="membro.nome for membro in membrosDisponiveis">
                         </select>
-                        <button class="btn btn-sm btn-success mt-2 w-100"
+                        <button class="btn btn-sm btn-primary mt-2 w-100"
                                 ng-click="adicionarMembro(dia)">
                             Adicionar
                         </button>
@@ -42,8 +42,8 @@
     </div>
 
     <div class="d-flex justify-content-end mt-4">
-        <button type="submit" class="btn btn-primary shadow">
-            Próxima
+        <button type="submit" class="btn btn-success shadow">
+            Avançar
         </button>
     </div>
 </form>
