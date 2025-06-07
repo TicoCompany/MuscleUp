@@ -53,6 +53,7 @@
     });
 
     app.controller("TreinoController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
+       
         $scope.iniciar = function (json) {
             if (json.Id) {
                 $http.get(`/api/Treinos/${json.Id}`)
@@ -74,7 +75,10 @@
             }
             $scope.divisoes = json.Divisoes;
             $scope.gruposMusculares = json.GruposMusculares;
-            $scope.etapaAtual = 1;
+            $scope.etapaAtual = 3;
+            console.log(json);
+
+          
         };
 
         $scope.etapaAtual = 1;

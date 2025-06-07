@@ -15,12 +15,16 @@ public class TreinoController : BaseController
     public IActionResult Create(int? id)
     {
         var divisoes = EnumExtensions.ToEnum<DivisaoDeTreino>();
-        var gruposMusculares = EnumExtensions.ToEnum<GrupoMuscular>();
+        var gruposMusculares = EnumExtensions.ToEnumName<GrupoMuscular>();
 
         ViewBag.Json = new
         {
             Divisoes = divisoes,
-            GruposMusculares = gruposMusculares,
+            GruposMusculares = gruposMusculares.Select(q => new
+            {
+                GrupoMuscular = q.EnumValue,
+                nome = q.Nome,
+            }),
             Id = id,
             IdAcademia = UsuarioLogado.IdAcademia
         };

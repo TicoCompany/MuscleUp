@@ -17,7 +17,7 @@
             <label class="form-label fw-semibold">Divisão</label>
             <select id="divisaoSelect"
                     class="form-select"
-                    ng-model="exercicio.divisao"
+                    ng-model="treino.divisao"
                     ng-options="divisao.Id as divisao.Nome for divisao in divisoes"
                     required>
             </select>
@@ -27,8 +27,8 @@
             <label class="form-label fw-semibold">Público?</label>
             <select class="form-select shadow-sm" ng-model="treino.publico" required>
                 <option value="" disabled selected>Selecione</option>
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
+                <option ng-value="true">Sim</option>
+                <option ng-value="false">Não</option>
             </select>
         </div>
 

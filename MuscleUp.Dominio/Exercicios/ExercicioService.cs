@@ -9,6 +9,7 @@ public interface IExercicioService
 {
     ResultService<string?> Salvar(ExercicioRequest request);
     ResultService<IQueryable<Exercicio>> Listar(ExercicioFilter filter);
+    ResultService<IQueryable<Exercicio>> ListarPorMembroMuscular(ExercicioFilter filter);
     ResultService<Exercicio?> BuscarPorId(int id);
     ResultService<int?> Deletar(int id);
 }
@@ -86,5 +87,25 @@ public class ExercicioService : IExercicioService
             return ResultService<Exercicio?>.Falha("Exercício não encontrado");
 
         return ResultService<Exercicio?>.Ok(exercicio);
+    }
+
+    public ResultService<IQueryable<Exercicio>> ListarPorMembroMuscular(ExercicioFilter filter)
+    {
+        var exercicio = _appDbContext.Exercicios.Include(q => q.Academia).AsNoTracking().AsQueryable();
+
+        if (filter.IdAcademia.HasValue)
+            exercicio = exercicio.Where(q => q.IdAcademia == filter.IdAcademia || q.IdAcademia == null);
+
+        if (!string.IsNullOrWhiteSpace(filter.Busca))
+            exercicio = exercicio.Where(q => q.Nome.Contains(filter.Busca));
+
+        if (filter.GrupoMuscular.HasValue)
+            exercicio = exercicio.Where(q => q.GrupoMuscular == filter.GrupoMuscular);
+
+        if (filter.Dificuldade.HasValue)
+            exercicio = exercicio.Where(q => q.Dificuldade == filter.Dificuldade);
+
+
+        return ResultService<IQueryable<Exercicio>>.Ok(exercicio);
     }
 }
