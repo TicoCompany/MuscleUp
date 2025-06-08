@@ -39,7 +39,7 @@
 					<td>{{ item.id}}</td>
 					<td>{{ item.nome }}</td>
 					<td class="text-end">
-						<a class="btn btn-sm btn-primary me-1" ng-href="/Treino/Create/{{item.id}}">
+						<a class="btn btn-sm btn-primary me-1" ng-href="/Treino/Create/?id={{item.id}}">
 							<i class="fa fa-edit"></i>
 						</a>
 						<button class="btn btn-sm btn-danger" ng-click="excluir(item.id)">

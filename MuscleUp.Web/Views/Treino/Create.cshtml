@@ -11,8 +11,7 @@
 <div ng-controller="TreinoController" ng-init='iniciar(@Html.Raw(json))' class="container">
 	<h2 class="fw-bold"> @ViewBag.Title</h2>
 
-	<step1 ng-show="etapaAtual === 1" treino="trenino" etapa-atual="etapaAtual" divisoes="divisoes"> </step1>
-	<step2 ng-show="etapaAtual === 2" treino="trenino" etapa-atual="etapaAtual" grupos-musculares="gruposMusculares"> </step2>
-	<step3 ng-show="etapaAtual === 3" treino="trenino" etapa-atual="etapaAtual"> </step3>
-
+	<step1 ng-show="etapaAtual === 1" treino="treino" etapa-atual="etapaAtual" divisoes="divisoes"> </step1>
+	<step2 ng-show="etapaAtual === 2" treino="treino" etapa-atual="etapaAtual" grupos-musculares="gruposMusculares"> </step2>
+	<step3 ng-show="etapaAtual === 3" treino="treino" etapa-atual="etapaAtual"> </step3>
 </div>

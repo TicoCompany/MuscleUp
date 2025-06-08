@@ -32,6 +32,5 @@ public sealed record ExercicioDoTreinoRequest
     public int IdExercicio { get; set; }
     public int Serie { get; set; }
     public int Repeticao { get; set; }
-    public string NomeDoExercicio { get; set; }
     public string Caminho { get; set; }
 }

@@ -54,15 +54,16 @@
     });
 
     app.controller("TreinoController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
-       
         $scope.iniciar = function (json) {
             if (json.Id) {
+                $rootScope.carregando = true;
                 $http.get(`/api/Treinos/${json.Id}`)
                     .then(function (response) {
                         if (!response.data.sucesso)
                             $mensagem.error(`${response.data.mensagem}`);
                         else {
-                            $scope.treino = response.data.data;
+                            $scope.treino = response.data.data.treino;
+                            console.log($scope.treino);
                         }
                     }, function (error) {
                         $mensagem.error("Erro ao buscar o treino");
@@ -79,7 +80,6 @@
             $scope.etapaAtual = 1;
             console.log(json);
 
-          
         };
 
         $scope.etapaAtual = 1;
@@ -110,7 +110,7 @@
                         $mensagem.error(`${response.data.mensagem}`);
                     else {
                         $mensagem.success(response.data.mensagem);
-                        location.href = "/treino/Index"
+                        location.href = "/Treino/Index"
                     }
                 }, function (error) {
                     $mensagem.error("Erro ao salvar o treino");

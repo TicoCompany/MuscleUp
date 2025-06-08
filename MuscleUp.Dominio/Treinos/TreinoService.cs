@@ -11,6 +11,7 @@ public interface ITreinoService
     ResultService<IQueryable<Treino>> Listar(TreinoFilter filter);
     ResultService<Treino?> BuscarPorId(int id);
     ResultService<int?> Deletar(int id);
+    ResultService<int?> DeletarGrupoMuscular(int id);
 }
 internal class TreinoService : ITreinoService
 {
@@ -55,11 +56,25 @@ internal class TreinoService : ITreinoService
     public ResultService<Treino?> BuscarPorId(int id)
     {
 
-        var treino = _appDbContext.Treinos.AsNoTracking().FirstOrDefault(q => q.Id == id);
+        var treino = _appDbContext.Treinos.Include(q => q.GruposMuscularesTrabalhados).ThenInclude(q => q.ExerciciosDoTreino).ThenInclude(q => q.Exercicio).AsNoTracking().FirstOrDefault(q => q.Id == id);
 
         if (treino == null)
             return ResultService<Treino?>.Falha("Treino não encontrado");
 
         return ResultService<Treino?>.Ok(treino);
+    }
+
+    public ResultService<int?> DeletarGrupoMuscular(int id)
+    {
+
+        var grupoMuscular = _appDbContext.GruposMuscularesTrabalhados.FirstOrDefault(q => q.Id == id);
+
+        if (grupoMuscular == null)
+            return ResultService<int?>.Falha("Grupo muscular encontrado");
+
+        _appDbContext.GruposMuscularesTrabalhados.Remove(grupoMuscular);
+        _appDbContext.SaveChanges();
+
+        return ResultService<int?>.Ok(null, "Grupo muscular excluído com sucesso!");
     }
 }

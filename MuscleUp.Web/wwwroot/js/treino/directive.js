@@ -17,17 +17,27 @@
                             if (!response.data.sucesso)
                                 $mensagem.error(`${response.data.mensagem}`);
                             else {
-                                scope.treino.id = response.data.data.id
-                                scope.treino.divisoes = response.data.data.divisoes;
-                                scope.etapaAtual++;
+                                if (!scope.treino.id) {
+                                    const url = new URL(window.location.href);
+                                    url.searchParams.set('id', response.data.data.id);
+                                    window.history.replaceState({}, '', url);
 
+                                    scope.treino.id = response.data.data.id
+                                    scope.treino.divisoes = response.data.data.divisoes;
+                                }
+
+                                scope.etapaAtual++;
                             }
                         }, function (error) {
                             $mensagem.error("Erro ao salvar as informações");
                         }).finally(function () {
                             $rootScope.carregando = false;
                         });
-                }
+                };
+
+                scope.voltar = function () {
+                    location.href = "/Treino/Index";
+                };
             },
             templateUrl: "/templates/treinos/step1.html"
         };
@@ -58,12 +68,14 @@
                     divisao.membroSelecionado = null;
                 };
 
-                scope.removerMembro = function (dia, membro) {
-                    const idx = dia.membros.indexOf(membro);
-                    if (idx >= 0) dia.membros.splice(idx, 1);
-                };
+                scope.voltar = function () {
+                    scope.etapaAtual--;
+                }
 
                 scope.avancar = function () {
+                    if (scope.treino.divisoes.some(q => q.membros.length < 1))
+                        return $mensagem.error("Insira ao menos um grupo muscular por dia!");
+
                     $http.post('/api/Treinos/Step2', scope.treino)
                         .then(function (response) {
                             if (!response.data.sucesso)
@@ -75,11 +87,9 @@
                                     divisao.membros.forEach(membro => {
                                         let membroDoBanco = membrosSalvos.find(q => q.grupoMuscular == membro.grupoMuscular);
                                         membro.id = membroDoBanco.idDoMembro;
-                                        console.log(membroDoBanco.idDoMembro);
                                     });
                                 });
                                 scope.etapaAtual++;
-                                console.log(scope.treino);
                             }
                         }, function (error) {
                             $mensagem.error("Erro ao salvar as informações");
@@ -87,6 +97,34 @@
                             $rootScope.carregando = false;
                         });
                 };
+
+                scope.removerMembro = function (divisao, membro) {
+                    if (!membro.id) {
+                        divisao.membros = divisao.membros.filter(q => q != membro);
+
+                    } else {
+                        $mensagem.confirm(`Deseja realmente excluir o membro ${membro.nome} deste treino ? Exercícios vinculados a ele serão removidos.`)
+                            .then(function (resposta) {
+                                if (resposta) {
+                                    $rootScope.carregando = true;
+                                    $http.delete(`/api/Treinos/ExcluirGrupoMuscular/${membro.id}`)
+                                        .then(function (response) {
+                                            if (!response.data.sucesso)
+                                                $mensagem.error(`${response.data.mensagem}`);
+                                            else {
+                                                divisao.membros = divisao.membros.filter(q => q != membro);
+                                            }
+                                        }, function (error) {
+                                            $mensagem.error("Erro ao excluír o grupo muscular");
+                                        }).finally(function () {
+                                            $rootScope.carregando = false;
+                                        });
+                                }
+                            });
+                    }
+
+                };
+
 
             },
             templateUrl: "/templates/treinos/step2.html"
@@ -97,7 +135,8 @@
         return {
             restrict: "E",
             scope: {
-                treino: "="
+                treino: "=",
+                etapaAtual: "="
             },
 
             link: function (scope) {
@@ -151,6 +190,10 @@
                     modalExercicio.show();
                 };
 
+                scope.voltar = function () {
+                    scope.etapaAtual--;
+                }
+
                 scope.selecionarExercicio = function (exercicio) {
                     exercicio.Selecionado = true;
                     scope.membroSelecionado.exercicios.push({ idExercicio: exercicio.id, nomeDoExercicio: exercicio.nome, caminho: exercicio.caminho });
@@ -190,10 +233,8 @@
                             if (!response.data.sucesso)
                                 $mensagem.error(`${response.data.mensagem}`);
                             else {
-                                $timeout(function () {
-                                    $mensagem.success(response.data.mensagem);
-                                    location.href = "Index";
-                                }, 1000);
+                                $mensagem.success(response.data.mensagem);
+                                location.href = "/Treino/Index";
                             }
                         }, function (error) {
                             $mensagem.error("Erro ao salvar as informações");
