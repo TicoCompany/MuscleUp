@@ -1,4 +1,5 @@
-﻿using MuscleUp.Dominio.Exercicios.Enums;
+﻿using MuscleUp.Dominio.Exercicios;
+using MuscleUp.Dominio.Exercicios.Enums;
 using MuscleUp.Dominio.Treinos;
 using MuscleUp.Dominio.Treinos.Enums;
 
@@ -12,4 +13,6 @@ public class GrupoMuscularTrabalhado
     public DivisaoDeSubTreino DivisaoDeTreino { get; set; }
 
     public virtual Treino Treino { get; set; }
+
+    public virtual ICollection<ExercicioDoTreino> ExerciciosDoTreino { get; set; } = new HashSet<ExercicioDoTreino>();
 }

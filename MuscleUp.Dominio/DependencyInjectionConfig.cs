@@ -4,6 +4,7 @@ using MuscleUp.Dominio.Contas;
 using MuscleUp.Dominio.Exercicios;
 using MuscleUp.Dominio.Mensageria;
 using MuscleUp.Dominio.Professores;
+using MuscleUp.Dominio.Treinos;
 using MuscleUp.Dominio.Usuarios;
 
 namespace MuscleUp.Dominio;
@@ -23,6 +24,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IContaService, ContaService>();
         services.AddScoped<IProfessorService, ProfessorService>();
         services.AddScoped<IExercicioService, ExercicioService>();
+        services.AddScoped<ITreinoService, TreinoService>();
 
     }
 

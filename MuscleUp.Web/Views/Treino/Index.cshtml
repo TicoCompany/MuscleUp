@@ -1,10 +1,12 @@
 ﻿@{
 	ViewBag.Title = "Treinos";
+	int idAcademia = ViewBag.IdAcademia;
 }
+
 @section Scripts {
 	<script src="~/js/treino/module.js"></script>
 }
-<div class="container mt-4" ng-controller="TreinoListController" ng-init="iniciar()">
+<div class="container mt-4" ng-controller="TreinoListController" ng-init="iniciar(@idAcademia)">
 	<h2 class=fw-bold>@ViewBag.Title</h2>
 
 	<div class="row mb-3">
@@ -20,7 +22,7 @@
 	</div>
 
 	<div class="text-end mb-3">
-		<a href="@Url.Action("Create", "treino")" class="btn btn-success">+ Adicionar</a>
+		<a href="@Url.Action("Create", "Treino")" class="btn btn-success">+ Adicionar</a>
 	</div>
 
 	<div class="table-responseive">
@@ -37,7 +39,7 @@
 					<td>{{ item.id}}</td>
 					<td>{{ item.nome }}</td>
 					<td class="text-end">
-						<a class="btn btn-sm btn-primary me-1" ng-href="/treino/Create/{{item.id}}">
+						<a class="btn btn-sm btn-primary me-1" ng-href="/Treino/Create/{{item.id}}">
 							<i class="fa fa-edit"></i>
 						</a>
 						<button class="btn btn-sm btn-danger" ng-click="excluir(item.id)">

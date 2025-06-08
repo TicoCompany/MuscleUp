@@ -9,6 +9,7 @@ public class TreinoController : BaseController
 {
     public IActionResult Index()
     {
+        ViewBag.IdAcademia = UsuarioLogado.IdAcademia;
         return View();
     }
 
@@ -22,7 +23,7 @@ public class TreinoController : BaseController
             Divisoes = divisoes,
             GruposMusculares = gruposMusculares.Select(q => new
             {
-                GrupoMuscular = q.EnumValue,
+                grupoMuscular = q.EnumValue,
                 nome = q.Nome,
             }),
             Id = id,

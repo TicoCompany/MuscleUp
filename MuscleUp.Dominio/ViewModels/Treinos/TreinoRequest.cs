@@ -23,5 +23,15 @@ public sealed record MembroMusculareRequest
 {
     public int? Id { get; set; }
     public GrupoMuscular GrupoMuscular { get; set; }
+    public List<ExercicioDoTreinoRequest> Exercicios { get; set; } = new List<ExercicioDoTreinoRequest>();
+}
 
+public sealed record ExercicioDoTreinoRequest
+{
+    public int? Id { get; set; }
+    public int IdExercicio { get; set; }
+    public int Serie { get; set; }
+    public int Repeticao { get; set; }
+    public string NomeDoExercicio { get; set; }
+    public string Caminho { get; set; }
 }

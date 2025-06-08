@@ -69,6 +69,15 @@
                             if (!response.data.sucesso)
                                 $mensagem.error(`${response.data.mensagem}`);
                             else {
+                                let membrosSalvos = response.data.data.membrosSalvos;
+
+                                scope.treino.divisoes.forEach(divisao => {
+                                    divisao.membros.forEach(membro => {
+                                        let membroDoBanco = membrosSalvos.find(q => q.grupoMuscular == membro.grupoMuscular);
+                                        membro.id = membroDoBanco.idDoMembro;
+                                        console.log(membroDoBanco.idDoMembro);
+                                    });
+                                });
                                 scope.etapaAtual++;
                                 console.log(scope.treino);
                             }
@@ -84,7 +93,7 @@
         };
     });
 
-    app.directive("step3", function ($http, $rootScope, $mensagem) {
+    app.directive("step3", function ($http, $rootScope, $mensagem, $timeout) {
         return {
             restrict: "E",
             scope: {
@@ -99,38 +108,44 @@
                     pagina: 1,
                     porPagina: 8
                 };
+                scope.abaAtiva = 0;
 
-                scope.treino = {
-                    nome: 'd',
-                    divisao: 2,
-                    publico: true,
-                    tempo: 'ddas',
-                    id: 20,
-                    divisoes: [
-                        {
-                            divisaoDeSubTreino: 0,
-                            nomeDaDivisao: 'A',
-                            membroSelecionado: null,
-                            membros: [{ nome: "Peito", grupoMuscular: 0 }, { nome: "Costas", grupoMuscular: 1 }]
-                        },
-                        {
-                            divisaoDeSubTreino: 1,
-                            nomeDaDivisao: 'B',
-                            membroSelecionado: null,
-                            membros: [{ nome: "Peito", grupoMuscular: 0 }, { nome: "Costas", grupoMuscular: 1 }]
-                        },
-                        {
-                            divisaoDeSubTreino: 2,
-                            nomeDaDivisao: 'C',
-                            membroSelecionado: null,
-                            membros: [{ nome: "Peito", grupoMuscular: 0 }, { nome: "Costas", grupoMuscular: 1 }]
-                        }
-                    ]
+                scope.trocarTab = function (index) {
+                    scope.abaAtiva = index;
                 };
+
+                //scope.treino = {
+                //    nome: 'd',
+                //    divisao: 2,
+                //    publico: true,
+                //    tempo: 'ddas',
+                //    id: 20,
+                //    divisoes: [
+                //        {
+                //            divisaoDeSubTreino: 0,
+                //            nomeDaDivisao: 'A',
+                //            membroSelecionado: null,
+                //            membros: [{ nome: "Peito", grupoMuscular: 0 }, { nome: "Costas", grupoMuscular: 1 }]
+                //        },
+                //        {
+                //            divisaoDeSubTreino: 1,
+                //            nomeDaDivisao: 'B',
+                //            membroSelecionado: null,
+                //            membros: [{ nome: "Peito", grupoMuscular: 0 }, { nome: "Costas", grupoMuscular: 1 }]
+                //        },
+                //        {
+                //            divisaoDeSubTreino: 2,
+                //            nomeDaDivisao: 'C',
+                //            membroSelecionado: null,
+                //            membros: [{ nome: "Peito", grupoMuscular: 0 }, { nome: "Costas", grupoMuscular: 1 }]
+                //        }
+                //    ]
+                //};
 
                 scope.adicionarExercicio = function (membro) {
                     if (!membro.exercicios)
                         membro.exercicios = [];
+                    console.log(membro);
                     scope.membroSelecionado = membro;
                     scope.listarExerciciosPorMembro();
                     modalExercicio.show();
@@ -139,7 +154,6 @@
                 scope.selecionarExercicio = function (exercicio) {
                     exercicio.Selecionado = true;
                     scope.membroSelecionado.exercicios.push({ idExercicio: exercicio.id, nomeDoExercicio: exercicio.nome, caminho: exercicio.caminho });
-                    console.log(scope.treino.divisoes);
                 };
 
                 scope.removerExercicio = function (exercicio) {
@@ -167,12 +181,25 @@
                         }).finally(function () {
                             $rootScope.carregando = false;
                         });
-                }
+                };
 
-
-                scope.abaAtiva = 0;
-                scope.trocarTab = function (index) {
-                    scope.abaAtiva = index;
+                scope.finalizar = function () {
+                    $rootScope.carregando = true;
+                    $http.post('/api/Treinos/Step3', scope.treino)
+                        .then(function (response) {
+                            if (!response.data.sucesso)
+                                $mensagem.error(`${response.data.mensagem}`);
+                            else {
+                                $timeout(function () {
+                                    $mensagem.success(response.data.mensagem);
+                                    location.href = "Index";
+                                }, 1000);
+                            }
+                        }, function (error) {
+                            $mensagem.error("Erro ao salvar as informações");
+                        }).finally(function () {
+                            $rootScope.carregando = false;
+                        });
                 };
             },
             templateUrl: "/templates/treinos/step3.html"

@@ -16,55 +16,57 @@
         </a>
     </li>
 </ul>
+<form ng-submit="finalizar()">
 
-<div ng-repeat="divisao in treino.divisoes" ng-show="abaAtiva === $index">
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <div class="d-flex gap-3">
-                <h4 class="mb-0">Grupos musculares: </h4>
-                <span class="mb-0 align-content-center"><span ng-repeat="m in divisao.membros" class="badge bg-dark me-1">{{ membro.nome }}</span></span>
-            </div>
-            <div ng-repeat="membro in divisao.membros" class="mt-4">
-                <div class="d-flex justify-content-between">
-                    <h4 ng-bind="membro.nome">
-                    </h4>
-
-                    <button class="btn btn-primary btn-sm" type="button" ng-click="adicionarExercicio(membro)"> Adicionar exercícios</button>
+    <div ng-repeat="divisao in treino.divisoes" ng-show="abaAtiva === $index">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex gap-3">
+                    <h4 class="mb-0">Grupos musculares: </h4>
+                    <span class="mb-0 align-content-center"><span ng-repeat="m in divisao.membros" class="badge bg-dark me-1">{{ membro.nome }}</span></span>
                 </div>
-                <div ng-show="!membro.exercicios || membro.exercicios.length < 1">
-                    Este membro não possuí exercícios cadastrados
+                <div ng-repeat="membro in divisao.membros" class="mt-4">
+                    <div class="d-flex justify-content-between">
+                        <h4 ng-bind="membro.nome">
+                        </h4>
 
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12 col-lg-6 mt-3" ng-repeat="exercicio in membro.exercicios">
-                        <div class="d-flex gap-3">
-                            <img src="https://picsum.photos/200/300" style="width: 200px; height:200px;" alt="Imagem aleatória">
-                            <div>
-                                <span class="fw-bold fs-5">Cruxifixo</span>
-                                <div>
-                                    <span class="form-label">Quantidade series</span>
-                                    <input type="number" class="form-control" ng-model="exercicio.serie" />
-                                </div>
-
-                                <div>
-                                    <span class="form-label">Quantidade repetições</span>
-                                    <input type="number" class="form-control" ng-model="exercicio.repeticao" />
-                                </div>
-                            </div>
-                        </div>
+                        <button class="btn btn-primary btn-sm" type="button" ng-click="adicionarExercicio(membro)"> Adicionar exercícios</button>
+                    </div>
+                    <div ng-show="!membro.exercicios || membro.exercicios.length < 1">
+                        Este membro não possuí exercícios cadastrados
 
                     </div>
-                </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-lg-6 mt-3" ng-repeat="exercicio in membro.exercicios">
+                            <div class="d-flex gap-3">
+                                <img src="https://picsum.photos/200/300" style="width: 200px; height:200px;" alt="Imagem aleatória">
+                                <div>
+                                    <span class="fw-bold fs-5">Cruxifixo</span>
+                                    <div>
+                                        <span class="form-label">Quantidade series</span>
+                                        <input required type="number" class="form-control" ng-model="exercicio.serie" />
+                                    </div>
 
+                                    <div>
+                                        <span class="form-label">Quantidade repetições</span>
+                                        <input required type="number" class="form-control" ng-model="exercicio.repeticao" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="d-flex justify-content-between">
-    <button class="btn btn-secondary" ng-click="voltar()" type="button"> Voltar</button>
-    <button class="btn btn-success" ng-click="finalizar()" type="button"> Finalizar </button>
-</div>
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-secondary" ng-click="voltar()" type="button"> Voltar</button>
+        <button class="btn btn-success" type="submit"> Finalizar </button>
+    </div>
+</form>
 
 <div class="modal fade modal-lg" id="modalExercicio" tabindex="-1" aria-labelledby="modalExercicioLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -126,8 +128,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>

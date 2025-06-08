@@ -2,10 +2,11 @@
     const app = angular.module("app");
 
     app.controller("TreinoListController", function ($scope, $http, $mensagem, $rootScope, $timeout) {
-        $scope.iniciar = function () {
+        $scope.iniciar = function (idAcademia) {
             $scope.filtros = {
                 pagina: 1,
-                porPagina: 10
+                porPagina: 10,
+                idAcademia: idAcademia,
             };
             $scope.listar();
         };
@@ -13,7 +14,7 @@
         $scope.listar = function () {
             $rootScope.carregando = true;
 
-            $http.get('/api/Treinos?pagina=' + $scope.filtros.pagina + '&porPagina=' + $scope.filtros.porPagina)
+            $http.get('/api/Treinos?Pagina=' + $scope.filtros.pagina + '&PorPagina=' + $scope.filtros.porPagina + '&IdAcademia=' + $scope.filtros.idAcademia)
                 .then(function (response) {
                     if (!response.data.sucesso)
                         $mensagem.error(`${response.data.mensagem}`);
@@ -75,7 +76,7 @@
             }
             $scope.divisoes = json.Divisoes;
             $scope.gruposMusculares = json.GruposMusculares;
-            $scope.etapaAtual = 3;
+            $scope.etapaAtual = 1;
             console.log(json);
 
           

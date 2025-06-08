@@ -19,6 +19,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Exercicio> Exercicios { get; set; }
     public DbSet<Treino> Treinos { get; set; }
     public DbSet<GrupoMuscularTrabalhado> GruposMuscularesTrabalhados { get; set; }
+    public DbSet<ExercicioDoTreino> ExerciciosDoTreino { get; set; }
 
     public int SaveChanges()
     {

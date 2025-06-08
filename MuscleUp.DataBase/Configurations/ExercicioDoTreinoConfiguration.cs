@@ -12,5 +12,6 @@ internal class ExercicioDoTreinoConfiguration : IEntityTypeConfiguration<Exercic
         builder.HasKey(q => q.Id);
 
         builder.HasOne(q => q.Exercicio).WithMany(q => q.ExerciciosDosTreinosVinculados).HasForeignKey(q => q.IdExercicio);
+        builder.HasOne(q => q.GrupoMuscularTrabalhado).WithMany(q => q.ExerciciosDoTreino).HasForeignKey(q => q.IdMembroTrabalhado);
     }
 }
