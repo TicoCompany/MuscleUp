@@ -31,7 +31,8 @@ public class ExercicioService : IExercicioService
             PublicId = request.PublicId,
             Caminho = request.Caminho,
             Descricao = request.Descricao,
-            Dificuldade = request.Dificuldade
+            Dificuldade = request.Dificuldade,
+            GrupoMuscular = request.GrupoMuscular,
         };
 
         if (request.Id != 0)
