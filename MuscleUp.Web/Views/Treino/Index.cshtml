@@ -1,0 +1,149 @@
+﻿@{
+	ViewBag.Title = "Treinos";
+	int idAcademia = ViewBag.IdAcademia;
+}
+
+@section Scripts {
+	<script src="~/js/treino/module.js"></script>
+}
+<div class="container mt-4" ng-controller="TreinoListController" ng-init="iniciar(@idAcademia)">
+	<h2 class=fw-bold>@ViewBag.Title</h2>
+
+	<div class="row mb-3">
+		<div class="col-md-6">
+			<span class="form-label">&nbsp;</span>
+			<div class="input-group">
+				<span class="input-group-text">
+					<i class="fa fa-search"></i>
+				</span>
+				<input type="text" class="form-control" placeholder="Buscar..." ng-model="filtros.busca">
+			</div>
+		</div>
+	</div>
+
+	<div class="text-end mb-3">
+		<a href="@Url.Action("Create", "Treino")" class="btn btn-success">+ Adicionar</a>
+	</div>
+
+	<div class="table-responsive-md">
+		<table class="table table-hover table-sm ">
+			<thead class="">
+				<tr>
+					<th>#</th>
+					<th>Nome</th>
+					<th> </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in treinos">
+					<td>{{ item.id}}</td>
+					<td>{{ item.nome }}</td>
+					<td class="text-end">
+
+						<div class="dropdown">
+							<button href="javascript:;" class="btn border-0 text-dark " data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fa-solid fa-ellipsis-vertical"></i>
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a class="dropdown-item btn" ng-href="/Treino/Create/{{item.id}}">
+										Editar
+									</a>
+								</li>
+								<li>
+									<button class="dropdown-item btn" ng-click="excluir(item.id)">
+										Excluir
+									</button>
+								</li>
+								<li><a class="dropdown-item" href="/Treino/Visualizar/{{item.id}}">Visualizar</a></li>
+								<li ng-show="!item.publico"><a class="dropdown-item" href="javascript:;" ng-click="abrirModalDeAlunos(item)">Enviar treino para alunos</a></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+				<tr ng-if="treinos.length === 0">
+					<td colspan="4" class="text-center text-muted">Nenhum resultado encontrado.</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<paginador ao-paginar="listar()"
+				   pagina-atual="filtros.pagina"
+				   total-paginas="filtros.totalPaginas">
+		</paginador>
+	</div>
+
+	<div class="modal fade modal-lg" id="modalAluno" tabindex="-1" aria-labelledby="modalAlunoLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="fw-bold" id="modalAlunoLabel"> {{treinoSelecionado.nome}}</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+				</div>
+				<div class="modal-body">
+					<h5>
+						Encaminhe o treino para seus alunos
+					</h5>
+					<div class="row my-3">
+						<div class="col-md-6">
+							<div class="input-group">
+								<span class="input-group-text">
+									<i class="fa fa-search"></i>
+								</span>
+								<input type="text" class="form-control" placeholder="Buscar..." ng-model="filtrosAluno.busca">
+							</div>
+						</div>
+
+						<div class="col-12 mt-3">
+							<button type="button" ng-click="listarAlunos()" class="btn btn-primary btn-sm">Buscar</button>
+						</div>
+					</div>
+
+					<div class="d-flex gap-3">
+						<span ng-repeat="aluno in alunosSelecionados">{{aluno.nome}}</span>
+					</div>
+					
+					<div class="table-responseive">
+						<table class="table table-hover table-sm ">
+							<thead class="">
+								<tr>
+									<th>Nome</th>
+									<th>E-mail </th>
+									<th> </th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in alunos">
+									<td class="align-content-center">{{ item.nome }}</td>
+									<td class="align-content-center">{{ item.email }}</td>
+									<td class="text-end align-content-center">
+										<button type="button" ng-show="!item.selecionado" ng-click="selecionarAluno(item)" class="btn btn-sm btn-success me-1">
+											Adicionar
+										</button>
+										<button type="button" ng-show="item.selecionado" ng-click="removerAluno(item)" class="btn btn-sm btn-danger me-1">
+											Remover
+										</button>
+									</td>
+								</tr>
+								<tr ng-if="treinos.length === 0">
+									<td colspan="4" class="text-center text-muted">Nenhum resultado encontrado.</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<paginador ao-paginar="listarAlunos()"
+								   pagina-atual="filtros.pagina"
+								   total-paginas="filtros.totalPaginas">
+						</paginador>
+					</div>
+
+				</div>
+				<div class="modal-footer d-flex gap-3 justify-content-end">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					<button type="button" class="btn btn-primary" ng-click="enviarTreinoAosAlunos()">Enviar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

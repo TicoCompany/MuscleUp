@@ -3,6 +3,8 @@ using MuscleUp.Dominio.Academias;
 using MuscleUp.Dominio.Alunos;
 using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.Exercicios;
+using MuscleUp.Dominio.GruposMuscularesTrabalhados;
+using MuscleUp.Dominio.Treinos;
 using MuscleUp.Dominio.Usuarios;
 
 namespace MuscleUp.DataBase;
@@ -15,6 +17,10 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Academia> Academias { get; set; }
     public DbSet<Aluno> Alunos { get; set; }
     public DbSet<Exercicio> Exercicios { get; set; }
+    public DbSet<Treino> Treinos { get; set; }
+    public DbSet<GrupoMuscularTrabalhado> GruposMuscularesTrabalhados { get; set; }
+    public DbSet<ExercicioDoTreino> ExerciciosDoTreino { get; set; }
+    public DbSet<TreinoPublicoEDestinadoDoAluno> TreinosPublicosEDestinadosDoAluno { get; set; }
 
     public int SaveChanges()
     {

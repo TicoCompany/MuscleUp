@@ -1,0 +1,160 @@
+﻿<!-- Cabeçalho -->
+<div class="d-flex align-items-center my-4 gap-2">
+    <div class="rounded-circle bg-warning d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
+        <strong class="fs-4">3</strong>
+    </div>
+    <h4 class="mb-0">Selecione os exercícios</h4>
+</div>
+
+<ul class="nav nav-underline mb-3">
+    <li class="nav-item" ng-repeat="divisao in treino.divisoes">
+        <a class="nav-link text-dark"
+           href="javascript:;"
+           ng-click="trocarTab($index)"
+           ng-class="{ active: abaAtiva === $index }">
+            Treino {{ divisao.nomeDaDivisao }}
+        </a>
+    </li>
+</ul>
+<form ng-submit="finalizar()">
+
+    <div ng-repeat="divisao in treino.divisoes" ng-if="abaAtiva === $index">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex gap-3">
+                    <h4 class="mb-0">Grupos musculares: </h4>
+                    <span class="mb-0 align-content-center"><span ng-repeat="membro in divisao.membros" class="badge bg-dark me-1">{{ membro.nome }}</span></span>
+                </div>
+
+                <div class="d-flex my-3 gap-2 align-items-lg-end flex-lg-row flex-column">
+                    <div class="d-flex gap-2">
+                        <div>
+                            <span class="form-label">Series padrões</span>
+                            <input ng-model="divisao.seriePadrao" type="number" class="form-control form-control-sm " />
+                        </div>
+
+                        <span class="fs-5 align-content-center mt-4">x</span>
+
+                        <div>
+                            <span class="form-label">Repetições padrões</span>
+                            <input ng-model="divisao.repeticaoPadrao" type="number" class="form-control form-control-sm " />
+                        </div>
+                    </div>
+                        
+                    <div>
+                        <button class="btn btn-outline-dark btn-sm" type="button" ng-click="aplicarPadrao(divisao)"> Aplicar padrão</button>
+                    </div>
+                </div>
+
+
+                <div ng-repeat="membro in divisao.membros" class="mt-4">
+                    <div class="d-flex justify-content-between">
+                        <h4 ng-bind="membro.nome">
+                        </h4>
+
+                        <button class="btn btn-primary btn-sm" type="button" ng-click="adicionarExercicio(membro)"> Adicionar exercícios</button>
+                    </div>
+                    <div ng-show="!membro.exercicios || membro.exercicios.length < 1">
+                        Este membro não possuí exercícios cadastrados
+
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-lg-6 mt-3" ng-repeat="exercicio in membro.exercicios">
+                            <div class="d-flex gap-3">
+                                <img ng-src="{{exercicio.caminho}}" style="width: 200px; height:200px;" alt="Imagem aleatória">
+                                <div>
+                                    <span class="fw-bold fs-5">{{exercicio.nomeDoExercicio}}</span>
+                                    <div>
+                                        <span class="form-label">Quantidade series</span>
+                                        <input required name="serie_{{$index}}" id="serie_{{$index}}" type="number" class="form-control form-control-sm w-50" ng-model="exercicio.serie" />
+                                    </div>
+
+                                    <div>
+                                        <span class="form-label">Quantidade repetições</span>
+                                        <input required name="repeticao_{{$index}}" id="repeticao_{{$index}}" type="number" class="form-control form-control-sm w-50" ng-model="exercicio.repeticao" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-secondary shadow" ng-click="voltar()" type="button"> Voltar</button>
+        <button class="btn btn-success shadow" type="submit"> Finalizar </button>
+    </div>
+</form>
+
+<div class="modal fade modal-lg" id="modalExercicio" tabindex="-1" aria-labelledby="modalExercicioLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="fw-bold" id="modalExercicioLabel">Grupo muscular: {{membroSelecionado.nome}}</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <h5>
+                    Adicione ou remova os exercícios
+                </h5>
+                <div class="row my-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fa fa-search"></i>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Buscar..." ng-model="filtros.busca">
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <button type="button" ng-click="listarExerciciosPorMembro()" class="btn btn-primary btn-sm">Buscar</button>
+                    </div>
+                </div>
+
+                <div class="table-responseive">
+                    <table class="table table-hover table-sm ">
+                        <thead class="">
+                            <tr>
+                                <th> </th>
+                                <th>Nome</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in exercicios">
+                                <td><img class="img-fluid" style="width: 100px" ng-src="{{item.caminho}}" /></td>
+                                <td class="align-content-center">{{ item.nome }}</td>
+                                <td class="text-end align-content-center">
+                                    <button type="button" ng-show="!item.Selecionado" ng-click="selecionarExercicio(item)" class="btn btn-sm btn-success me-1">
+                                        Adicionar
+                                    </button>
+                                    <button type="button" ng-show="item.Selecionado" ng-click="removerExercicio(item)" class="btn btn-sm btn-danger me-1">
+                                        Remover
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-if="treinos.length === 0">
+                                <td colspan="4" class="text-center text-muted">Nenhum resultado encontrado.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <paginador ao-paginar="listarExerciciosPorMembro()"
+                               pagina-atual="filtros.pagina"
+                               total-paginas="filtros.totalPaginas">
+                    </paginador>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
