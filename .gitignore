@@ -343,3 +343,5 @@ MedSpace.Web/keys/
 MedSpace.Site/keys/
 MedSpace.Web/wwwroot/bundles/
 MedSpace.Site/wwwroot/bundles/
+/MuscleUp.Web/Views/Home/Index.cshtml
+/MuscleUp.Web/Views/Conta/Login.cshtml

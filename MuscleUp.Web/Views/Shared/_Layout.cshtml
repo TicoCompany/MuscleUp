@@ -70,7 +70,7 @@
 			</div>
 		</nav>
 	</header>
-	<div class="container">
+	<div class="d-flex flex-column min-vh-100">
 		<main role="main" class="pb-3">
 			@RenderBody()
 		</main>
@@ -95,7 +95,7 @@
 			<span ng-bind="mensagemGlobal.texto"></span>
 		</div>
 	</div>
-	<footer class="border-top footer text-muted">
+	<footer class="border-top footer text-muted mt-auto">
 		<div class="container">
 			&copy; 2025 - MuscleUp.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 		</div>
