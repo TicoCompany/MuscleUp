@@ -4,6 +4,7 @@ using MuscleUp.Dominio.Contas;
 using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.Filters;
 using MuscleUp.Dominio.Mensageria;
+using MuscleUp.Dominio.Treinos;
 using MuscleUp.Dominio.Usuarios;
 using MuscleUp.Dominio.ViewModels.Alunos;
 using MuscleUp.Dominio.ViewModels.Contas;
@@ -13,8 +14,10 @@ public interface IAlunoService
 {
     Task<ResultService<int?>> Salvar(AlunoRequest request, int idUsuarioLogado);
     ResultService<IQueryable<Aluno>> Listar(AlunoFilter filter);
+    ResultService<IQueryable<TreinoPublicoEDestinadoDoAluno>> ListarTreinosVinculados(TreinosVinculadosFilter filter);
     ResultService<Aluno?> BuscarPorId(int id);
     ResultService<int?> Deletar(int id);
+    ResultService<int?> DesvincularTreino(int id);
 }
 internal class AlunoService : IAlunoService
 {
@@ -30,12 +33,12 @@ internal class AlunoService : IAlunoService
     }
 
     public async Task<ResultService<int?>> Salvar(AlunoRequest request, int idUsuarioLogado)
-    {   
+    {
         var usuarioDoBanco = _appDbContext.Usuarios.AsNoTracking().FirstOrDefault(q => q.Id == request.Id);
         string? senhaNova = null;
         string? senhaEncriptografada = null;
 
-        if(_contaService.EmailJaExistente(new ValidarEmailRequest(request.Email, idUsuarioLogado, usuarioDoBanco)))
+        if (_contaService.EmailJaExistente(new ValidarEmailRequest(request.Email, idUsuarioLogado, usuarioDoBanco)))
             return ResultService<int?>.Falha("E-mail já cadastrado!");
 
         if (usuarioDoBanco == null)
@@ -126,5 +129,31 @@ internal class AlunoService : IAlunoService
             return ResultService<Aluno?>.Falha("Aluno não encontrado");
 
         return ResultService<Aluno?>.Ok(aluno);
+    }
+
+    public ResultService<IQueryable<TreinoPublicoEDestinadoDoAluno>> ListarTreinosVinculados(TreinosVinculadosFilter filter)
+    {
+        var treinosVinculados = _appDbContext.TreinosPublicosEDestinadosDoAluno
+            .Include(q => q.Treino)
+            .Include(q => q.ProfessorQueDestinou)
+            .Where(q => q.IdAluno == filter.IdAluno).AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filter.Busca))
+            treinosVinculados = treinosVinculados.Where(q => q.Treino.Nome.Contains(filter.Busca) || q.ProfessorQueDestinou.Nome.Contains(filter.Busca));
+
+        return ResultService<IQueryable<TreinoPublicoEDestinadoDoAluno>>.Ok(treinosVinculados);
+    }
+
+    public ResultService<int?> DesvincularTreino(int id)
+    {
+        var treinoVinculado = _appDbContext.TreinosPublicosEDestinadosDoAluno.FirstOrDefault(q => q.Id == id);
+        if (treinoVinculado == null)
+            return ResultService<int?>.Falha("Registro não encontrado!");
+
+        _appDbContext.TreinosPublicosEDestinadosDoAluno.Remove(treinoVinculado);
+        _appDbContext.SaveChanges();
+
+        return ResultService<int?>.Ok(null, "Treino desvinculado com sucesso!");
+
     }
 }

@@ -35,4 +35,16 @@ public class AlunoController : BaseController
 
         return View();
     }
+
+    public IActionResult VisualizarTreinosDoAluno(int id)
+    {
+        var aluno = _context.Alunos.Include(q => q.Usuario).AsNoTracking();
+
+        ViewBag.Json = new
+        {
+            Id = id
+        };
+
+        return View(aluno);
+    }
 }
