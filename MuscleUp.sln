@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuscleUp.Dominio", "MuscleU
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuscleUp.DataBase", "MuscleUp.DataBase\MuscleUp.DataBase.csproj", "{F7AFD0B7-28FB-4C7E-AD3E-22B10B0A0C71}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuscleUp.Api", "MuscleUp.Api\MuscleUp.Api.csproj", "{DEF624A0-E5C3-4DDE-AE77-7613CA106AC4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9A36A86B-03AA-4BEE-8032-47429E235387} = {9A36A86B-03AA-4BEE-8032-47429E235387}
+		{F7AFD0B7-28FB-4C7E-AD3E-22B10B0A0C71} = {F7AFD0B7-28FB-4C7E-AD3E-22B10B0A0C71}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +33,15 @@ Global
 		{F7AFD0B7-28FB-4C7E-AD3E-22B10B0A0C71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7AFD0B7-28FB-4C7E-AD3E-22B10B0A0C71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7AFD0B7-28FB-4C7E-AD3E-22B10B0A0C71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEF624A0-E5C3-4DDE-AE77-7613CA106AC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF624A0-E5C3-4DDE-AE77-7613CA106AC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF624A0-E5C3-4DDE-AE77-7613CA106AC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF624A0-E5C3-4DDE-AE77-7613CA106AC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3EBEC8E3-8CC3-4A2C-AD1B-678C41A652CD}
 	EndGlobalSection
 EndGlobal
