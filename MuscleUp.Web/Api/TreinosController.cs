@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MuscleUp.Dominio.Alunos;
 using MuscleUp.Dominio.Componentes;
 using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.Exercicios;
@@ -172,8 +173,19 @@ public class TreinosController : BaseApiController
         return Sucesso(new { Treino = treino });
     }
 
-    [HttpDelete, Route("ExcluirGrupoMuscular/{id:int}")]
+    [HttpDelete, Route("{id:int}")]
     public IActionResult Excluir([FromRoute] int id)
+    {
+        var result = _treinoService.Deletar(id);
+
+        if (!result.Sucesso)
+            return Erro(result.Mensagem!);
+
+        return Sucesso(result.Mensagem!);
+    }
+
+    [HttpDelete, Route("ExcluirGrupoMuscular/{id:int}")]
+    public IActionResult ExcluirGrupoMuscular([FromRoute] int id)    
     {
         var result = _treinoService.DeletarGrupoMuscular(id);
 
