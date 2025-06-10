@@ -18,13 +18,35 @@
 </ul>
 <form ng-submit="finalizar()">
 
-    <div ng-repeat="divisao in treino.divisoes" ng-show="abaAtiva === $index">
+    <div ng-repeat="divisao in treino.divisoes" ng-if="abaAtiva === $index">
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <div class="d-flex gap-3">
                     <h4 class="mb-0">Grupos musculares: </h4>
-                    <span class="mb-0 align-content-center"><span ng-repeat="m in divisao.membros" class="badge bg-dark me-1">{{ membro.nome }}</span></span>
+                    <span class="mb-0 align-content-center"><span ng-repeat="membro in divisao.membros" class="badge bg-dark me-1">{{ membro.nome }}</span></span>
                 </div>
+
+                <div class="d-flex my-3 gap-2 align-items-lg-end flex-lg-row flex-column">
+                    <div class="d-flex gap-2">
+                        <div>
+                            <span class="form-label">Series padrões</span>
+                            <input ng-model="divisao.seriePadrao" type="number" class="form-control form-control-sm " />
+                        </div>
+
+                        <span class="fs-5 align-content-center mt-4">x</span>
+
+                        <div>
+                            <span class="form-label">Repetições padrões</span>
+                            <input ng-model="divisao.repeticaoPadrao" type="number" class="form-control form-control-sm " />
+                        </div>
+                    </div>
+                        
+                    <div>
+                        <button class="btn btn-outline-dark btn-sm" type="button" ng-click="aplicarPadrao(divisao)"> Aplicar padrão</button>
+                    </div>
+                </div>
+
+
                 <div ng-repeat="membro in divisao.membros" class="mt-4">
                     <div class="d-flex justify-content-between">
                         <h4 ng-bind="membro.nome">
@@ -39,17 +61,17 @@
                     <div class="row mb-3">
                         <div class="col-12 col-lg-6 mt-3" ng-repeat="exercicio in membro.exercicios">
                             <div class="d-flex gap-3">
-                                <img src="https://picsum.photos/200/300" style="width: 200px; height:200px;" alt="Imagem aleatória">
+                                <img ng-src="{{exercicio.caminho}}" style="width: 200px; height:200px;" alt="Imagem aleatória">
                                 <div>
-                                    <span class="fw-bold fs-5">Cruxifixo</span>
+                                    <span class="fw-bold fs-5">{{exercicio.nomeDoExercicio}}</span>
                                     <div>
                                         <span class="form-label">Quantidade series</span>
-                                        <input required type="number" class="form-control" ng-model="exercicio.serie" />
+                                        <input required name="serie_{{$index}}" id="serie_{{$index}}" type="number" class="form-control form-control-sm w-50" ng-model="exercicio.serie" />
                                     </div>
 
                                     <div>
                                         <span class="form-label">Quantidade repetições</span>
-                                        <input required type="number" class="form-control" ng-model="exercicio.repeticao" />
+                                        <input required name="repeticao_{{$index}}" id="repeticao_{{$index}}" type="number" class="form-control form-control-sm w-50" ng-model="exercicio.repeticao" />
                                     </div>
                                 </div>
                             </div>
@@ -85,12 +107,12 @@
                             <span class="input-group-text">
                                 <i class="fa fa-search"></i>
                             </span>
-                            <input type="text" class="form-control" placeholder="buscar..." ng-model="filtros.busca">
+                            <input type="text" class="form-control" placeholder="Buscar..." ng-model="filtros.busca">
                         </div>
                     </div>
 
                     <div class="col-12 mt-3">
-                        <button class="btn btn-primary btn-sm">Buscar</button>
+                        <button type="button" ng-click="listarExerciciosPorMembro()" class="btn btn-primary btn-sm">Buscar</button>
                     </div>
                 </div>
 
@@ -98,14 +120,16 @@
                     <table class="table table-hover table-sm ">
                         <thead class="">
                             <tr>
+                                <th> </th>
                                 <th>Nome</th>
                                 <th> </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="item in exercicios">
-                                <td>{{ item.nome }}</td>
-                                <td class="text-end">
+                                <td><img class="img-fluid" style="width: 100px" ng-src="{{item.caminho}}" /></td>
+                                <td class="align-content-center">{{ item.nome }}</td>
+                                <td class="text-end align-content-center">
                                     <button type="button" ng-show="!item.Selecionado" ng-click="selecionarExercicio(item)" class="btn btn-sm btn-success me-1">
                                         Adicionar
                                     </button>

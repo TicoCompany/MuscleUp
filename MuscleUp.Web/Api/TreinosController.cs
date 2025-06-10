@@ -28,35 +28,14 @@ public class TreinosController : BaseApiController
     {
         try
         {
-            var treino = new Treino
-            {
-                Id = request.Id ?? 0,
-                IdAcademia = UsuarioLogado.IdAcademia ?? 1,
+            var result = _treinoService.SalvarStep1(request, UsuarioLogado);
 
-                Nome = request.Nome,
-                Divisao = request.Divisao,
-                Publico = request.Publico,
-                Tempo = request.Tempo,
-            };
+            if (!result.Sucesso)
+                return Erro(result.Mensagem!);
 
-            if (!request.Id.HasValue)
-                _appDbContext.Treinos.Add(treino);
-            else
-                _appDbContext.Treinos.Update(treino);
+            var dados = result.Dados!;
 
-            _appDbContext.SaveChanges();
-
-
-            var divisoesDeSubTreino = ObterDivisoes(treino.Divisao);
-            var divisoes = divisoesDeSubTreino.Select(q => new
-            {
-                DivisaoDeSubTreino = (int)q,
-                NomeDaDivisao = q.DisplayName(),
-                Membros = new List<object>()
-            });
-
-
-            return Sucesso(new { Id = treino.Id, divisoes = divisoes });
+            return Sucesso(new { Id = dados.First().IdTreino, divisoes = dados });
         }
         catch (Exception ex)
         {
@@ -64,48 +43,19 @@ public class TreinosController : BaseApiController
         }
     }
 
-
     [HttpPost, Route("Step2")]
     public IActionResult SalvarGruposMusculares([FromBody] TreinoRequest request)
     {
         try
         {
-            var treino = _appDbContext.Treinos.FirstOrDefault(q => q.Id == request.Id);
-            if (treino == null)
-                return Erro("Treino não encontrado!");
+            var result = _treinoService.SalvarStep2(request);
 
-            List<GrupoMuscularTrabalhado> membrosMusculares = new List<GrupoMuscularTrabalhado>();
-            foreach (var divisao in request.Divisoes)
-            {
-                foreach (var membro in divisao.Membros)
-                {
-                    var membroTrabalhado = new GrupoMuscularTrabalhado
-                    {
-                        Id = membro.Id ?? 0,
-                        GrupoMuscular = membro.GrupoMuscular,
-                        IdTreino = request.Id ?? throw new Exception("Ocorreu um erro inesperado"),
-                        DivisaoDeTreino = divisao.DivisaoDeSubTreino,
-                    };
+            if (!result.Sucesso)
+                return Erro(result.Mensagem!);
 
-                    if (membro.Id.HasValue)
-                        _appDbContext.GruposMuscularesTrabalhados.Update(membroTrabalhado);
-                    else
-                        _appDbContext.GruposMuscularesTrabalhados.Add(membroTrabalhado);
+            var dados = result.Dados!;
 
-                    membrosMusculares.Add(membroTrabalhado);
-                }
-
-            }
-            _appDbContext.SaveChanges();
-
-            var membrosSalvos = membrosMusculares.Select(q => new
-            {
-                GrupoMuscular = q.GrupoMuscular,
-                DivisaoDeSubTreino = q.DivisaoDeTreino,
-                IdDoMembro = q.Id,
-            });
-
-            return Sucesso(new { MembrosSalvos = membrosSalvos });
+            return Sucesso(new { MembrosSalvos = dados });
         }
         catch (Exception ex)
         {
@@ -118,36 +68,32 @@ public class TreinosController : BaseApiController
     {
         try
         {
-            var treino = _appDbContext.Treinos.FirstOrDefault(q => q.Id == request.Id);
-            if (treino == null)
-                return Erro("Treino não encontrado!");
+            var result = _treinoService.SalvarStep3(request);
 
-            foreach (var divisao in request.Divisoes)
-            {
-                foreach (var membro in divisao.Membros)
-                {
-                    foreach (var q in membro.Exercicios)
-                    {
-                        var exercicio = new ExercicioDoTreino
-                        {
-                            Id = q.Id ?? 0,
-                            IdExercicio = q.IdExercicio,
-                            IdMembroTrabalhado = membro.Id ?? throw new Exception("Um erro inesperado aconteceu"),
-                            Repeticao = q.Repeticao,
-                            Serie = q.Serie
-                        };
+            if (!result.Sucesso)
+                return Erro(result.Mensagem!);
 
-                        if (exercicio.Id == 0)
-                            _appDbContext.ExerciciosDoTreino.Add(exercicio);
-                        else
-                            _appDbContext.ExerciciosDoTreino.Update(exercicio);
-                    }
-                }
+            var dados = result.Dados!;
 
-            }
-            _appDbContext.SaveChanges();
+            return Sucesso(result.Mensagem!);
+        }
+        catch (Exception ex)
+        {
+            return Erro("Um erro inesperado aconteceu!");
+        }
+    }
 
-            return Sucesso("Treino salvo com sucesso!");
+    [HttpPost, Route("EnviarParaAlunos")]
+    public IActionResult EnviarParaAlunos([FromBody] EnviarTreinoParaAluno request)
+    {
+        try
+        {
+            var result = _treinoService.EnviarParaAlunos(request, UsuarioLogado.Id);
+
+            if (!result.Sucesso)
+                return Erro(result.Mensagem!);
+
+            return Sucesso(result.Mensagem!);
         }
         catch (Exception ex)
         {
@@ -197,7 +143,7 @@ public class TreinosController : BaseApiController
         {
             dados.Id,
             dados.DificuldadeDoTreino,
-            dados.Publico,  
+            dados.Publico,
             dados.Divisao,
             dados.Tempo,
             dados.Nome,
@@ -223,7 +169,7 @@ public class TreinosController : BaseApiController
             }).ToList()
         };
 
-        return Sucesso(new {Treino = treino });
+        return Sucesso(new { Treino = treino });
     }
 
     [HttpDelete, Route("ExcluirGrupoMuscular/{id:int}")]
@@ -237,72 +183,5 @@ public class TreinosController : BaseApiController
         return Sucesso(result.Mensagem!);
     }
 
-    private List<DivisaoDeSubTreino> ObterDivisoes(DivisaoDeTreino divisao)
-    {
-        switch (divisao)
-        {
-            case DivisaoDeTreino.A:
-                return new List<DivisaoDeSubTreino>
-            {
-                DivisaoDeSubTreino.A,
-            };
-            case DivisaoDeTreino.AB:
-                return new List<DivisaoDeSubTreino>
-            {
-                DivisaoDeSubTreino.A,
-                DivisaoDeSubTreino.B,
-            };
-            case DivisaoDeTreino.ABC:
-                return new List<DivisaoDeSubTreino>
-            {
-                DivisaoDeSubTreino.A,
-                DivisaoDeSubTreino.B,
-                DivisaoDeSubTreino.C,
-            };
-            case DivisaoDeTreino.ABCD:
-                return new List<DivisaoDeSubTreino>
-            {
-                DivisaoDeSubTreino.A,
-                DivisaoDeSubTreino.B,
-                DivisaoDeSubTreino.C,
-                DivisaoDeSubTreino.D,
-            };
-            case DivisaoDeTreino.ABCDE:
-                return new List<DivisaoDeSubTreino>
-            {
-                DivisaoDeSubTreino.A,
-                DivisaoDeSubTreino.B,
-                DivisaoDeSubTreino.C,
-                DivisaoDeSubTreino.D,
-                DivisaoDeSubTreino.E,
-            };
-            case DivisaoDeTreino.ABCDEF:
-                return new List<DivisaoDeSubTreino>
-            {
-                DivisaoDeSubTreino.A,
-                DivisaoDeSubTreino.B,
-                DivisaoDeSubTreino.C,
-                DivisaoDeSubTreino.D,
-                DivisaoDeSubTreino.E,
-                DivisaoDeSubTreino.F,
-            };
-            case DivisaoDeTreino.ABCDEFG:
-                return new List<DivisaoDeSubTreino>
-            {
-                DivisaoDeSubTreino.A,
-                DivisaoDeSubTreino.B,
-                DivisaoDeSubTreino.C,
-                DivisaoDeSubTreino.D,
-                DivisaoDeSubTreino.E,
-                DivisaoDeSubTreino.F,
-                DivisaoDeSubTreino.G,
-            };
-        }
 
-        return new List<DivisaoDeSubTreino>
-            {
-                DivisaoDeSubTreino.A,
-            };
-
-    }
 }

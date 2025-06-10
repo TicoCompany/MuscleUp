@@ -75,7 +75,6 @@
                     });
 
             }
-            console.log(json)
             $scope.academias = json.Academias;
         };
 
@@ -88,7 +87,7 @@
                         $mensagem.error(`${response.data.mensagem}`);
                     else {
                         $mensagem.success(response.data.mensagem);
-                        location.href = "/Aluno/Index"
+                        location.href = "/Aluno/Index";
                     }
                 }, function (error) {
                     $mensagem.error("Erro ao salvar o aluno");

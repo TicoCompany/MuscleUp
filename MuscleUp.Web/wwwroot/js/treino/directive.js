@@ -7,22 +7,38 @@
             scope: {
                 treino: "=",
                 etapaAtual: "=",
-                divisoes: "="
+                divisoes: "=",
+                dificuldades: "="
             },
 
             link: function (scope) {
                 scope.proximaEtapa = function () {
+                    if (!scope.treino.id) {
+                        $mensagem.confirm(`Tem certeza que deseja salvar o treino? Após salvar a divisão do treino não poderá ser alterada!`)
+                            .then(function (resposta) {
+                                if (resposta) {
+                                    salvarStep1();
+                                }
+                            });
+                    } else {
+                        salvarStep1();
+                    }
+                };
+
+                function salvarStep1() {
+                    $rootScope.carregando = true;
                     $http.post('/api/Treinos/Step1', scope.treino)
                         .then(function (response) {
                             if (!response.data.sucesso)
                                 $mensagem.error(`${response.data.mensagem}`);
                             else {
-                                if (!scope.treino.id) {
-                                    const url = new URL(window.location.href);
-                                    url.searchParams.set('id', response.data.data.id);
-                                    window.history.replaceState({}, '', url);
-
-                                    scope.treino.id = response.data.data.id
+                                if (!scope.treino.divisoes || scope.treino.divisoes.length < 1) {
+                                    if (!scope.treino.id) {
+                                        const url = new URL(window.location.href);
+                                        url.searchParams.set('id', response.data.data.id);
+                                        window.history.replaceState({}, '', url);
+                                        scope.treino.id = response.data.data.id
+                                    }
                                     scope.treino.divisoes = response.data.data.divisoes;
                                 }
 
@@ -33,7 +49,7 @@
                         }).finally(function () {
                             $rootScope.carregando = false;
                         });
-                };
+                }
 
                 scope.voltar = function () {
                     location.href = "/Treino/Index";
@@ -59,8 +75,9 @@
 
                     if (!divisao.membros)
                         divisao.membros = [];
-
-                    if (divisao.membros.some(q => q == divisao.membroSelecionado))
+                    console.log(divisao.membroSelecionado);
+                    console.log(divisao.membros);
+                    if (divisao.membros.some(q => q.grupoMuscular == divisao.membroSelecionado.grupoMuscular))
                         return $mensagem.error("Esse membro já foi inserido!");
 
                     divisao.membros.push(divisao.membroSelecionado);
@@ -75,6 +92,8 @@
                 scope.avancar = function () {
                     if (scope.treino.divisoes.some(q => q.membros.length < 1))
                         return $mensagem.error("Insira ao menos um grupo muscular por dia!");
+
+                    $rootScope.carregando = true;
 
                     $http.post('/api/Treinos/Step2', scope.treino)
                         .then(function (response) {
@@ -184,7 +203,8 @@
                 scope.adicionarExercicio = function (membro) {
                     if (!membro.exercicios)
                         membro.exercicios = [];
-                    console.log(membro);
+
+                    scope.exercicios = [];
                     scope.membroSelecionado = membro;
                     scope.listarExerciciosPorMembro();
                     modalExercicio.show();
@@ -201,7 +221,20 @@
 
                 scope.removerExercicio = function (exercicio) {
                     exercicio.Selecionado = false;
-                    scope.membroSelecionado.exercicios.filter(q => q.idExercicio != exercicio.id)
+                    scope.membroSelecionado.exercicios = scope.membroSelecionado.exercicios.filter(q => q.idExercicio != exercicio.id)
+                };
+
+                scope.aplicarPadrao = function (divisao) {
+                    console.log(divisao);
+                    if (!divisao.repeticaoPadrao || !divisao.seriePadrao)
+                        return $mensagem.error("Informe os valores padrão para aplicar!");
+
+                    divisao.membros.forEach(membro => {
+                        membro.exercicios.forEach(exercicio => {
+                            exercicio.serie = divisao.seriePadrao;
+                            exercicio.repeticao = divisao.repeticaoPadrao;
+                        });
+                    });
                 };
 
                 scope.listarExerciciosPorMembro = function () {

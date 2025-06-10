@@ -16,6 +16,7 @@ public interface IAppDbContext
     DbSet<Exercicio> Exercicios { get; set; }
     DbSet<Treino> Treinos { get; set; }
     DbSet<GrupoMuscularTrabalhado> GruposMuscularesTrabalhados { get; set; }
+    DbSet<TreinoPublicoEDestinadoDoAluno> TreinosPublicosEDestinadosDoAluno { get; set; }
     DbSet<ExercicioDoTreino> ExerciciosDoTreino { get; set; }
 
 

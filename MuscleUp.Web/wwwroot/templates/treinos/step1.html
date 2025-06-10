@@ -17,8 +17,19 @@
             <label class="form-label fw-semibold">Divisão</label>
             <select id="divisaoSelect"
                     class="form-select"
+                    ng-disabled="treino.id"
                     ng-model="treino.divisao"
                     ng-options="divisao.Id as divisao.Nome for divisao in divisoes"
+                    required>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">Dificuldade</label>
+            <select id="dificuldadeSelect"
+                    class="form-select"
+                    ng-model="treino.dificuldadeDoTreino"
+                    ng-options="dificuldade.Id as dificuldade.Nome for dificuldade in dificuldades"
                     required>
             </select>
         </div>
