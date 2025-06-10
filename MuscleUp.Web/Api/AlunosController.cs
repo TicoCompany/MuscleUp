@@ -3,6 +3,7 @@ using MuscleUp.Dominio.Alunos;
 using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.Filters;
 using MuscleUp.Dominio.Pagination;
+using MuscleUp.Dominio.Treinos;
 using MuscleUp.Dominio.ViewModels.Alunos;
 
 namespace MuscleUp.Web.Api;
@@ -72,10 +73,50 @@ public class AlunosController : BaseApiController
         }
     }
 
+    [HttpGet, Route("ListarTreinosVinculados")]
+    public async Task<IActionResult> ListarTreinosVinculados([FromQuery] TreinosVinculadosFilter filter)
+    {
+        try
+        {
+            var result = _alunoService.ListarTreinosVinculados(filter);
+            if (!result.Sucesso)
+                return Erro(result.Mensagem!);
+
+            var paginedQuery = await PaginatedList<TreinoPublicoEDestinadoDoAluno>.CreateAsync(result.Dados!, filter.Pagina, filter.PorPagina);
+
+            return Sucesso(new
+            {
+                alunos = paginedQuery.Items!.Select(q => new
+                {
+                    NomeDoTreino = q.Treino.Nome,
+                    Professor = q.ProfessorQueDestinou.Nome,
+                    Id = q.Id,
+                }),
+                TotalPaginas = paginedQuery.TotalPages
+            });
+
+        }
+        catch (Exception ex)
+        {
+            return Erro("Um erro inesperado aconteceu!");
+        }
+    }
+
     [HttpDelete, Route("{id:int}")]
     public IActionResult Excluir([FromRoute] int id)
     {
         var result = _alunoService.Deletar(id);
+
+        if (!result.Sucesso)
+            return Erro(result.Mensagem!);
+
+        return Sucesso(result.Mensagem!);
+    }
+
+    [HttpDelete, Route("DesvincularTreino/{id:int}")]
+    public IActionResult DesvincularTreino([FromRoute] int id)
+    {
+        var result = _alunoService.DesvincularTreino(id);
 
         if (!result.Sucesso)
             return Erro(result.Mensagem!);

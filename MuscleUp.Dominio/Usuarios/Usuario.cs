@@ -1,5 +1,7 @@
 ﻿using MuscleUp.Dominio.Academias;
 using MuscleUp.Dominio.Alunos;
+using MuscleUp.Dominio.GruposMuscularesTrabalhados;
+using MuscleUp.Dominio.Treinos;
 
 namespace MuscleUp.Dominio.Usuarios;
 
@@ -13,5 +15,9 @@ public class Usuario
     public string? Telefone { get; set; }
 
     public virtual Aluno? Aluno { get; set; }    
-    public virtual Academia? Academia { get; set; }    
+    public virtual Academia? Academia { get; set; }
+
+    public virtual ICollection<TreinoPublicoEDestinadoDoAluno> TreinosMinistrados { get; set; } = new HashSet<TreinoPublicoEDestinadoDoAluno>();
+    public virtual ICollection<Treino> TreinosCriados { get; set; } = new HashSet<Treino>();
+
 }

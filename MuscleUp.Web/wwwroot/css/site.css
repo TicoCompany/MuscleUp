@@ -1,14 +1,25 @@
 .alert-global {
     max-width: 450px !important;
     width: 100% !important;
+    z-index: 1060 !important;
 }
-    .anterior-loader {
+.fixed-bottom{
+    z-index:1060 !important;
+}
+.anterior-loader {
     position: fixed;
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5); /* fundo cinza semi-transparente */
     z-index: 1000;
 }
+
+.accordion-button:not(.collapsed) {
+    color: white;
+    background-color: #6f6f6f;
+    box-shadow: none;
+}
+
 
 .loader-overlay {
     position: fixed;

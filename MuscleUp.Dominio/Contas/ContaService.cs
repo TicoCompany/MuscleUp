@@ -22,7 +22,7 @@ internal class ContaService : IContaService
 
     public ResultService<Usuario> Login(LoginRequest request)
     {
-        var usuario = _appDbContext.Usuarios.AsNoTracking().FirstOrDefault(u => u.Email.ToLower() == request.Email.ToLower());
+        var usuario = _appDbContext.Usuarios.AsNoTracking().FirstOrDefault(u => u.Email.ToLower() == request.Email.ToLower() && u.Aluno == null);
 
         if (usuario == null)
             return ResultService<Usuario>.Falha("E-mail não cadastrado");

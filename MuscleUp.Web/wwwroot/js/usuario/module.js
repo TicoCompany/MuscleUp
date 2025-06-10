@@ -63,7 +63,7 @@
                             $scope.usuario = response.data.data;
                         }
                     }, function (error) {
-                        $mensagem.error("Erro ao excluír o usuário");
+                        $mensagem.error("Erro ao buscar o usuário");
                     }).finally(function () {
                         $rootScope.carregando = false;
                     });

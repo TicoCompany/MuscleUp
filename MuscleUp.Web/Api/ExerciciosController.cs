@@ -91,7 +91,42 @@ public class ExerciciosController : BaseApiController
                 {
                     q.Nome,
                     q.Id,
+                    q.Caminho,
                     NomeDaAcademia = q.Academia != null ? q.Academia.Nome : "-",
+                    Dificuldade = q.Dificuldade.DisplayName(),
+                    GrupoMuscular = q.GrupoMuscular.DisplayName()
+                }),
+                TotalPaginas = paginedQuery.TotalPages
+            });
+
+        }
+        catch (Exception ex)
+        {
+            return Erro("Um erro inesperado aconteceu!");
+        }
+    }
+
+    [HttpGet, Route("ListarPorMembroMuscular")]
+    public async Task<IActionResult> ListarPorMembroMuscular([FromQuery] ExercicioFilter filter)
+    {
+        try
+        {
+            if (UsuarioLogado.IdAcademia != 0)
+                filter.IdAcademia = UsuarioLogado.IdAcademia;
+
+            var result = _exercicioService.ListarPorMembroMuscular(filter);
+            if (!result.Sucesso)
+                return Erro(result.Mensagem!);
+
+            var paginedQuery = await PaginatedList<Exercicio>.CreateAsync(result.Dados!, filter.Pagina, filter.PorPagina);
+
+            return Sucesso(new
+            {
+                Exercicios = paginedQuery.Items!.Select(q => new
+                {
+                    q.Nome,
+                    q.Caminho,
+                    q.Id,
                     Dificuldade = q.Dificuldade.DisplayName(),
                     GrupoMuscular = q.GrupoMuscular.DisplayName()
                 }),

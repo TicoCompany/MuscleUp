@@ -1,0 +1,54 @@
+﻿@{
+	ViewBag.Title = "Treinos do aluno";
+}
+@section Scripts {
+	<script src="~/js/aluno/module.js"></script>
+}
+<div class="container mt-4" ng-controller="TreinosDoAlunoController" ng-init="iniciar()">
+	<h2 class=fw-bold>@ViewBag.Title</h2>
+
+	<div class="row mb-3">
+		<div class="col-md-6">
+			<span class="form-label">&nbsp;</span>
+			<div class="input-group">
+				<span class="input-group-text">
+					<i class="fa fa-search"></i>
+				</span>
+				<input type="text" class="form-control" placeholder="Buscar..." ng-model="filtros.busca">
+			</div>
+		</div>
+	</div>
+
+	<div class="table-responseive">
+		<table class="table table-hover table-sm ">
+			<thead class="">
+				<tr>
+					<th>#</th>
+					<th>Nome</th>
+					<th>Email</th>
+					<th> </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in treinos">
+					<td>{{ item.id}}</td>
+					<td>{{ item.nome }}</td>
+					<td>{{ item.email }}</td>
+					<td class="text-end">
+						<button class="btn btn-sm btn-danger" ng-click="excluir(item.id)">
+							<i class="fa fa-trash"></i>
+						</button>
+					</td>
+				</tr>
+				<tr ng-if="treinos.length === 0">
+					<td colspan="4" class="text-center text-muted">Nenhum resultado encontrado.</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<paginador ao-paginar="listar()"
+				   pagina-atual="filtros.pagina"
+				   total-paginas="filtros.totalPaginas">
+		</paginador>
+	</div>
+</div>

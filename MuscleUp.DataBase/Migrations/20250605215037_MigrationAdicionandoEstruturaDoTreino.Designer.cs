@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MuscleUp.DataBase;
 
@@ -11,9 +12,11 @@ using MuscleUp.DataBase;
 namespace MuscleUp.DataBase.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250605215037_MigrationAdicionandoEstruturaDoTreino")]
+    partial class MigrationAdicionandoEstruturaDoTreino
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,6 +145,9 @@ namespace MuscleUp.DataBase.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("GrupoMuscularTrabalhadoId")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdExercicio")
                         .HasColumnType("int");
 
@@ -156,9 +162,9 @@ namespace MuscleUp.DataBase.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdExercicio");
+                    b.HasIndex("GrupoMuscularTrabalhadoId");
 
-                    b.HasIndex("IdMembroTrabalhado");
+                    b.HasIndex("IdExercicio");
 
                     b.ToTable("ExerciciosDoTreino", (string)null);
                 });
@@ -194,9 +200,6 @@ namespace MuscleUp.DataBase.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DificuldadeDoTreino")
-                        .HasColumnType("int");
 
                     b.Property<int>("Divisao")
                         .HasColumnType("int");
@@ -319,15 +322,15 @@ namespace MuscleUp.DataBase.Migrations
 
             modelBuilder.Entity("MuscleUp.Dominio.Exercicios.ExercicioDoTreino", b =>
                 {
-                    b.HasOne("MuscleUp.Dominio.Exercicios.Exercicio", "Exercicio")
-                        .WithMany("ExerciciosDosTreinosVinculados")
-                        .HasForeignKey("IdExercicio")
+                    b.HasOne("MuscleUp.Dominio.GruposMuscularesTrabalhados.GrupoMuscularTrabalhado", "GrupoMuscularTrabalhado")
+                        .WithMany()
+                        .HasForeignKey("GrupoMuscularTrabalhadoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MuscleUp.Dominio.GruposMuscularesTrabalhados.GrupoMuscularTrabalhado", "GrupoMuscularTrabalhado")
-                        .WithMany("ExerciciosDoTreino")
-                        .HasForeignKey("IdMembroTrabalhado")
+                    b.HasOne("MuscleUp.Dominio.Exercicios.Exercicio", "Exercicio")
+                        .WithMany("ExerciciosDosTreinosVinculados")
+                        .HasForeignKey("IdExercicio")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -427,11 +430,6 @@ namespace MuscleUp.DataBase.Migrations
             modelBuilder.Entity("MuscleUp.Dominio.Exercicios.Exercicio", b =>
                 {
                     b.Navigation("ExerciciosDosTreinosVinculados");
-                });
-
-            modelBuilder.Entity("MuscleUp.Dominio.GruposMuscularesTrabalhados.GrupoMuscularTrabalhado", b =>
-                {
-                    b.Navigation("ExerciciosDoTreino");
                 });
 
             modelBuilder.Entity("MuscleUp.Dominio.Treinos.Treino", b =>

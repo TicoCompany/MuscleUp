@@ -29,5 +29,5 @@ public enum GrupoMuscular
     [Display(Name = "Glúteos")]
     Gluteos,
 
-    Panturrilhas = 11
+    Panturrilhas
 }
