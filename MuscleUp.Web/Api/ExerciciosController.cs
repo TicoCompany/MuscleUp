@@ -91,6 +91,8 @@ public class ExerciciosController : BaseApiController
                 {
                     q.Nome,
                     q.Id,
+                    q.IdAcademia,
+                    q.Caminho,
                     NomeDaAcademia = q.Academia != null ? q.Academia.Nome : "-",
                     Dificuldade = q.Dificuldade.DisplayName(),
                     GrupoMuscular = q.GrupoMuscular.DisplayName()
@@ -106,12 +108,15 @@ public class ExerciciosController : BaseApiController
     }
 
     [HttpDelete, Route("{id:int}")]
-    public IActionResult Excluir([FromRoute] int id)
+    public async Task<IActionResult> Excluir([FromRoute] int id)
     {
         var result = _exercicioService.Deletar(id);
 
         if (!result.Sucesso)
             return Erro(result.Mensagem!);
+
+        var deletionParams = new DeletionParams(result.Dados);
+        var response = await _cloudinary.DestroyAsync(deletionParams);
 
         return Sucesso(result.Mensagem!);
     }

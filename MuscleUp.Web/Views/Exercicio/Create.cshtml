@@ -14,7 +14,7 @@
 
         <div class="mb-3 col-lg-6">
             <label for="Nome" class="form-label">Nome</label>
-            <input type="text" maxlength="64" ng-model="exercicio.nome" required class="form-control" id="Nome">
+            <input type="text" maxlength="64" ng-model="exercicio.nome" required onchange="angular.element(this).scope().carregarImagem(this)" class="form-control" id="Nome">
         </div>
 
         <div class="mb-3 col-lg-6">
@@ -41,9 +41,9 @@
             <textarea class="form-control" ng-model="exercicio.descricao" required rows="3" maxlength="128"></textarea>
         </div>
 
-        <div class="mb-3 col-lg-6 text-center" ng-show="imagemDoExercicio">
+        <div ng-if="exercicio.imagemBase64 || exercicio.caminho" class="mb-3 col-lg-6 text-center">
             <label>&nbsp;</label>
-            <img class="img-fluid" style="width:130px; max-height:150px" ng-src="{{exercicio.caminho}}" alt="imagem do exercício"/>
+            <img class="img-fluid" style="width:250px; max-height:250px" ng-src="{{!exercicio.imagemBase64 ? exercicio.caminho : (exercicio.imagemBase64) }}" alt="imagem do exercício" />
         </div>
 
         <div class="d-flex gap-2 justify-content-end">

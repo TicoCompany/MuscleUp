@@ -43,6 +43,7 @@
 		<table class="table table-hover table-sm ">
 			<thead class="">
 				<tr>
+					<th> </th>
 					<th>Nome</th>
 					<th>Grupo muscular</th>
 					<th>Dificuldade</th>
@@ -52,15 +53,16 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="item in exercicios">
-					<td>{{ item.nome }}</td>
-					<td>{{ item.grupoMuscular }}</td>
-					<td>{{ item.dificuldade }}</td>
-					<td ng-if="idAcademia == 0">{{ item.nomeDaAcademia  }}</td>
-					<td class="text-end">
-						<a class="btn btn-sm btn-primary me-1" ng-href="/Exercicio/Create/{{item.id}}">
+					<td><img style="width: 170px;" ng-src="{{item.caminho}}" /></td>
+					<td class="align-content-center">{{ item.nome }}</td>
+					<td class="align-content-center">{{ item.grupoMuscular }}</td>
+					<td class="align-content-center">{{ item.dificuldade }}</td>
+					<td class="align-content-center" ng-if="idAcademia == 0">{{ item.nomeDaAcademia  }}</td>
+					<td class="text-end align-content-center">
+						<a class="btn btn-sm btn-primary me-1" ng-show="item.idAcademia != null || idAcademia == 0" ng-href="/Exercicio/Create/{{item.id}}">
 							<i class="fa fa-edit"></i>
 						</a>
-						<button class="btn btn-sm btn-danger" ng-click="excluir(item.id)">
+						<button ng-if="item.idAcademia != null || idAcademia == 0" class="btn btn-sm btn-danger" ng-click="excluir(item.id)">
 							<i class="fa fa-trash"></i>
 						</button>
 					</td>

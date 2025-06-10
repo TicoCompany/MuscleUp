@@ -5,7 +5,7 @@
         $scope.iniciar = function (json) {
             $scope.filtros = {
                 pagina: 1,
-                porPagina: 10
+                porPagina: 8
             };
             $scope.listar();
             $scope.academias = json.Academias;
@@ -84,8 +84,41 @@
             $scope.idAcademia = json.IdAcademia;
             $scope.gruposMusculares = json.GruposMusculares;
             $scope.dificuldades = json.Dificuldades;
-            console.log(json);
         };
+
+        $scope.$watch('exercicio.arquivo', function () {
+            $timeout(function () {
+                var arquivo = $scope.exercicio.arquivo;
+
+                if (!arquivo) {
+                    return;
+                }
+
+                var tiposPermitidos = ['image/png', 'image/jpeg', 'image/webp'];
+                if (tiposPermitidos.indexOf(arquivo.type) === -1) {
+                    $mensagem.error('Tipo de arquivo não suportado. Envie uma imagem PNG ou JPEG.');
+                    return;
+                }
+
+                var tamanhoMaximo = 1 * 1024 * 1024; // 1 MB
+                if (arquivo.size > tamanhoMaximo) {
+                    alert('Imagem muito grande. Tamanho máximo permitido: 1MB.');
+                    return;
+                }
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $scope.$apply(function () {
+                        $scope.exercicio.imagemBase64 = e.target.result;
+                    });
+                };
+
+                reader.readAsDataURL(arquivo);
+                console.log($scope.exercicio);
+            }, 100);
+
+
+        });
 
         $scope.salvar = function () {
             if ($scope.exercicio.id == 0 && !$scope.exercicio.arquivo)

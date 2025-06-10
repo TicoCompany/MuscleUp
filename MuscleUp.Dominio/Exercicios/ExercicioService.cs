@@ -10,7 +10,7 @@ public interface IExercicioService
     ResultService<string?> Salvar(ExercicioRequest request);
     ResultService<IQueryable<Exercicio>> Listar(ExercicioFilter filter);
     ResultService<Exercicio?> BuscarPorId(int id);
-    ResultService<int?> Deletar(int id);
+    ResultService<string?> Deletar(int id);
 }
 
 public class ExercicioService : IExercicioService
@@ -48,7 +48,7 @@ public class ExercicioService : IExercicioService
         var exercicio = _appDbContext.Exercicios.Include(q => q.Academia).AsNoTracking().AsQueryable();
 
         if (filter.IdAcademia.HasValue)
-            exercicio = exercicio.Where(q => q.IdAcademia == filter.IdAcademia);
+            exercicio = exercicio.Where(q => q.IdAcademia == filter.IdAcademia || q.IdAcademia == null);
 
         if (!string.IsNullOrWhiteSpace(filter.Busca))
             exercicio = exercicio.Where(q => q.Nome.Contains(filter.Busca));
@@ -63,18 +63,18 @@ public class ExercicioService : IExercicioService
         return ResultService<IQueryable<Exercicio>>.Ok(exercicio);
     }
 
-    public ResultService<int?> Deletar(int id)
+    public ResultService<string?> Deletar(int id)
     {
 
-        var Exercicio = _appDbContext.Exercicios.FirstOrDefault(q => q.Id == id);
+        var exercicio = _appDbContext.Exercicios.FirstOrDefault(q => q.Id == id);
 
-        if (Exercicio == null)
-            return ResultService<int?>.Falha("Exercício não encontrado");
-
-        _appDbContext.Exercicios.Remove(Exercicio);
+        if (exercicio == null)
+            return ResultService<string?>.Falha("Exercício não encontrado");
+        var publicId = exercicio.PublicId;
+        _appDbContext.Exercicios.Remove(exercicio);
         _appDbContext.SaveChanges();
 
-        return ResultService<int?>.Ok(null, "Exercício excluído com sucesso!");
+        return ResultService<string?>.Ok(publicId, "Exercício excluído com sucesso!");
     }
 
     public ResultService<Exercicio?> BuscarPorId(int id)
