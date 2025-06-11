@@ -1,0 +1,34 @@
+﻿﻿@{
+    Layout = "_LayoutSemDesign";
+}
+@section Scripts {
+    <script src="~/js/conta/module.js"></script>
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100 " ng-controller="LoginController" ng-init="iniciar()">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center mb-4">Login</h5>
+                        <form ng-submit="login()">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input ng-model="usuario.Email" type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="senha" class="form-label">Senha</label>
+                                <input ng-model="usuario.Senha" type="password" class="form-control" id="senha" name="senha" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Entrar</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
