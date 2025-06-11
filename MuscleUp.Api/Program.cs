@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
+builder.AddDataBaseConfiguration();
 services.AddCors();
 services.AddControllers()
     .AddJsonOptions(options => { options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull; });
@@ -20,6 +21,7 @@ services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
     });
 
