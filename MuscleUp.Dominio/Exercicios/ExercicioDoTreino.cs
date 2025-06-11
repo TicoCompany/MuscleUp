@@ -1,7 +1,8 @@
-﻿using MuscleUp.Dominio.GruposMuscularesTrabalhados;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MuscleUp.Dominio.GruposMuscularesTrabalhados;
 
 namespace MuscleUp.Dominio.Exercicios;
-
+[Table("exerciciosdotreino")]
 public class ExercicioDoTreino
 {
     public int Id { get; set; }
