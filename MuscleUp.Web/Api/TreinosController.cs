@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MuscleUp.Dominio.Alunos;
 using MuscleUp.Dominio.Componentes;
 using MuscleUp.Dominio.DataBase;
-using MuscleUp.Dominio.Exercicios;
 using MuscleUp.Dominio.Filters;
-using MuscleUp.Dominio.GruposMuscularesTrabalhados;
 using MuscleUp.Dominio.Pagination;
 using MuscleUp.Dominio.Treinos;
 using MuscleUp.Dominio.Treinos.Enums;
-using MuscleUp.Dominio.Usuarios;
 using MuscleUp.Dominio.ViewModels.Treinos;
 
 namespace MuscleUp.Web.Api;

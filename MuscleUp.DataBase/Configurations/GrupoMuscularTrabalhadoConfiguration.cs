@@ -8,7 +8,7 @@ internal class GrupoMuscularTrabalhadoConfiguration : IEntityTypeConfiguration<G
 {
     public void Configure(EntityTypeBuilder<GrupoMuscularTrabalhado> builder)
     {
-        builder.ToTable("GruposMuscularesTrabalhados");
+        builder.ToTable("gruposmuscularestrabalhados");
         builder.HasKey(c => c.Id);
 
         builder.HasOne(q => q.Treino).WithMany(q => q.GruposMuscularesTrabalhados).HasForeignKey(q => q.IdTreino);

@@ -8,7 +8,7 @@ internal class ExercicioDoTreinoConfiguration : IEntityTypeConfiguration<Exercic
 {
     public void Configure(EntityTypeBuilder<ExercicioDoTreino> builder)
     {
-        builder.ToTable("ExerciciosDoTreino");
+        builder.ToTable("exerciciosdotreino");
         builder.HasKey(q => q.Id);
 
         builder.HasOne(q => q.Exercicio).WithMany(q => q.ExerciciosDosTreinosVinculados).HasForeignKey(q => q.IdExercicio);

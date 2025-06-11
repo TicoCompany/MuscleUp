@@ -8,7 +8,7 @@ internal class TreinoPublicoEDestinadoDoAlunoConfiguration : IEntityTypeConfigur
 {
     public void Configure(EntityTypeBuilder<TreinoPublicoEDestinadoDoAluno> builder)
     {
-        builder.ToTable("TreinosPublicosEDestinadosDoAluno");
+        builder.ToTable("treinospublicosedestinadosdoaluno");
 
         builder.HasKey(c => c.Id);
 

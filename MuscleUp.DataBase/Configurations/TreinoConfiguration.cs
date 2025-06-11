@@ -8,7 +8,7 @@ internal class TreinoConfiguration : IEntityTypeConfiguration<Treino>
 {
     public void Configure(EntityTypeBuilder<Treino> builder)
     {
-        builder.ToTable("Treinos");
+        builder.ToTable("treinos");
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Nome).HasMaxLength(128);
         builder.Property(c => c.Tempo).HasMaxLength(12);
