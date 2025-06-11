@@ -1,21 +1,17 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MuscleUp.Dominio.Auth;
 using MuscleUp.Dominio.Contas;
-using MuscleUp.Dominio.DataBase;
 using MuscleUp.Dominio.ViewModels.Contas;
-using System.Security.Claims;
 namespace MuscleUp.Web.Api;
 
 public class ContasController : BaseApiController
 {
-    private readonly IAppDbContext _appDbContext;
     private readonly IContaService _contasService;
 
-    public ContasController(IAppDbContext appDbContext, IContaService contasService)
+    public ContasController(IContaService contasService)
     {
-        _appDbContext = appDbContext;
         _contasService = contasService;
     }
 
