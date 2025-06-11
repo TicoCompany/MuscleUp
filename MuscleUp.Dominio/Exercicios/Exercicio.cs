@@ -1,8 +1,9 @@
-﻿using MuscleUp.Dominio.Academias;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MuscleUp.Dominio.Academias;
 using MuscleUp.Dominio.Exercicios.Enums;
 
 namespace MuscleUp.Dominio.Exercicios;
-
+[Table("exercicios")]
 public class Exercicio
 {
     public int Id { get; set; }

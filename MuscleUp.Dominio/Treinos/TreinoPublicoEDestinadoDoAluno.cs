@@ -1,8 +1,9 @@
-﻿using MuscleUp.Dominio.Alunos;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MuscleUp.Dominio.Alunos;
 using MuscleUp.Dominio.Usuarios;
 
 namespace MuscleUp.Dominio.Treinos;
-
+[Table("treinospublicosEDestinadosDoAluno")]
 public class TreinoPublicoEDestinadoDoAluno
 {
     public int Id { get; set; }

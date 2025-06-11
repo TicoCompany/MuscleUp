@@ -1,9 +1,10 @@
-﻿using MuscleUp.Dominio.GruposMuscularesTrabalhados;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using MuscleUp.Dominio.Treinos;
 using MuscleUp.Dominio.Usuarios;
 
 namespace MuscleUp.Dominio.Alunos;
 
+[Table("alunos")]
 public class Aluno
 {
     public int IdUsuario {  get; set; }   
