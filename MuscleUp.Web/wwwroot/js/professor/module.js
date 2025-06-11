@@ -64,7 +64,7 @@
                         if (!response.data.sucesso)
                             $mensagem.error(`${response.data.mensagem}`);
                         else {
-                            $scope.Professor = response.data.data;
+                            $scope.professor = response.data.data;
                         }
                     }, function (error) {
                         $mensagem.error("Erro ao excluír o professor");

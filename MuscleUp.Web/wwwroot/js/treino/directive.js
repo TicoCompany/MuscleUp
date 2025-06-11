@@ -225,7 +225,6 @@
                 };
 
                 scope.aplicarPadrao = function (divisao) {
-                    console.log(divisao);
                     if (!divisao.repeticaoPadrao || !divisao.seriePadrao)
                         return $mensagem.error("Informe os valores padrão para aplicar!");
 

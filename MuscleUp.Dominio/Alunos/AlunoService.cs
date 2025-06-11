@@ -87,7 +87,7 @@ internal class AlunoService : IAlunoService
                 EmailDoDestinatario = usuario.Email,
                 Nome = usuario.Nome,
             };
-            await _enviadorDeEmail.EnviarSenhaParaAluno(emailModel, "MuscleUp", senhaNova);
+            _enviadorDeEmail.EnviarSenhaParaAluno(emailModel, "MuscleUp", senhaNova);
         }
 
 

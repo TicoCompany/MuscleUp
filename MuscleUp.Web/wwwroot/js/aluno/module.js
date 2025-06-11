@@ -26,18 +26,18 @@
                         $scope.filtros.totalPaginas = response.data.data.totalPaginas;
                     }
                 }, function (error) {
-                    $mensagem.error("Erro ao listar os treinos");
+                    $mensagem.error("Erro ao listar os alunos");
                 }).finally(function () {
                     $rootScope.carregando = false;
                 });
         };
 
         $scope.excluir = function (id) {
-            $mensagem.confirm("Deseja realmente excluir este treino?")
+            $mensagem.confirm("Deseja realmente excluir este aluno?")
                 .then(function (resposta) {
                     if (resposta) {
                         $rootScope.carregando = true;
-                        $http.delete(`/api/Treino/${id}`)
+                        $http.delete(`/api/Alunos/${id}`)
                             .then(function (response) {
                                 if (!response.data.sucesso)
                                     $mensagem.error(`${response.data.mensagem}`);

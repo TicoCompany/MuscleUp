@@ -6,13 +6,6 @@
 .fixed-bottom{
     z-index:1060 !important;
 }
-.anterior-loader {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* fundo cinza semi-transparente */
-    z-index: 1000;
-}
 
 .accordion-button:not(.collapsed) {
     color: white;
@@ -20,6 +13,13 @@
     box-shadow: none;
 }
 
+.anterior-loader {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* fundo cinza semi-transparente */
+    z-index: 1061;
+}
 
 .loader-overlay {
     position: fixed;
@@ -27,7 +27,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 1050;
+    z-index: 1061 !important;
     display: flex;
     align-items: center;
     justify-content: center;
