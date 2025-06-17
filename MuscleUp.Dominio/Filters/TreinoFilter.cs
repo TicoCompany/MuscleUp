@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MuscleUp.Dominio.Exercicios.Enums;
-using MuscleUp.Dominio.Treinos.Enums;
+﻿using MuscleUp.Dominio.Treinos.Enums;
 
 namespace MuscleUp.Dominio.Filters;
 
