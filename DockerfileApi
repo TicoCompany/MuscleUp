@@ -4,18 +4,18 @@ WORKDIR /src
 
 # Copia arquivos da solution e dos projetos para dentro do container
 COPY *.sln ./
-COPY MuscleUp.Web/*.csproj ./MuscleUp.Api/
+COPY MuscleUp.Api/*.csproj ./MuscleUp.Api/
 COPY MuscleUp.DataBase/*.csproj ./MuscleUp.DataBase/
 COPY MuscleUp.Dominio/*.csproj ./MuscleUp.Dominio/
 
 # Restaura as dependências
-RUN dotnet restore MuscleUp.Web/MuscleUp.Web.csproj
+RUN dotnet restore MuscleUp.Api/MuscleUp.Api.csproj
 
 # Copia tudo para dentro da imagem
 COPY . .
 
 # Publica o projeto web
-RUN dotnet publish MuscleUp.Api/MuscleUp.Web.csproj -c Release -o /app/publish
+RUN dotnet publish MuscleUp.Api/MuscleUp.Api.csproj -c Release -o /app/publish
 
 # Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
